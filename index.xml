@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Anirban&#39;s Notebook</title>
+    <link>https://anirban-1009.github.io/</link>
+    <description>Recent content on Anirban&#39;s Notebook</description>
+    <image>
+      <url>https://anirban-1009.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://anirban-1009.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 09 Jun 2022 20:37:49 +0530</lastBuildDate><atom:link href="https://anirban-1009.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mail</title>
+      <link>https://anirban-1009.github.io/mail/</link>
+      <pubDate>Wed, 29 Jun 2022 17:30:49 +0000</pubDate>
+      
+      <guid>https://anirban-1009.github.io/mail/</guid>
+      <description> </description>
+    </item>
+    
+    <item>
+      <title>Python and Me</title>
+      <link>https://anirban-1009.github.io/blogs/python-and-me/</link>
+      <pubDate>Thu, 09 Jun 2022 20:37:49 +0530</pubDate>
+      
+      <guid>https://anirban-1009.github.io/blogs/python-and-me/</guid>
+      <description>Content coming soon 🐍🐍 </description>
+    </item>
+    
+    <item>
+      <title>Making this site</title>
+      <link>https://anirban-1009.github.io/projects/making_this_site/</link>
+      <pubDate>Thu, 09 Jun 2022 20:32:10 +0530</pubDate>
+      
+      <guid>https://anirban-1009.github.io/projects/making_this_site/</guid>
+      <description>How to make a Hugo web application Hugo is one of the most popular open-source static site generators. With its amazing speed and flexibility, Hugo makes building websites fun again.
+So in short this site is very much created using hugo and a custom theme. This site is been built on linux(Zorin OS) so the commands and steps been followed can be different for the OS changes.
+Installing Hugo To install hugo on your machine you can use the following command</description>
+    </item>
+    
+    <item>
+      <title>Behind the Guy!</title>
+      <link>https://anirban-1009.github.io/about/</link>
+      <pubDate>Thu, 09 Jun 2022 13:14:37 +0530</pubDate>
+      
+      <guid>https://anirban-1009.github.io/about/</guid>
+      <description> Greating Humans I am Anirban Sikdar, an undergraduate Computer Science Engineering(Artificial Intelligence &amp;amp; Machine Learning) Student. I have a keen interest in Image Processing, Robotics, Deep Space research and Astronomy. Building visualisations and interactive systems for the concepts been taught and watching them in action is the most fun part of building things.
+Interests Machine Learning Website Building Space stuff Formula 1 Image Processing Music </description>
+    </item>
+    
+  </channel>
+</rss>
