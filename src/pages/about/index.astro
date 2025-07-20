@@ -1,12 +1,16 @@
 ---
-import { getEntry } from 'astro:content';
-import Layout from '../../layout/layout.astro';
 import Image from 'astro/components/Image.astro';
+import { getEntry } from 'astro:content';
 import Prose from '../../components/prose.astro';
+import Layout from '../../layout/layout.astro';
 
 const post = await getEntry('about', 'about'); 
 const aboutHeading = "I am Anirban Sikdar, an undergraduate Computer Science Engineering(Artificial Intelligence & Machine Learning) Student. I have a keen interest in Image Processing, Robotics, Deep Space research and Astronomy. Building visualisations and interactive systems for the concepts been taught and watching them in action is the most fun part of building things."
 const aboutDescription = " I have also gained experience in Raspberry Pi and also on various IOT platforms as Thingsboards and Adafruit IO. I have a Problem solving instinct where when i face one i don't usually tend to back-off easily 😉."
+
+if (! post){
+  throw new Error("Content for 'about/about' not found. Please ensure src/content/about/about.mdx exists.");
+}
 const { Content } = await post.render();
 
 
