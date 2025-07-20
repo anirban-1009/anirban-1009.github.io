@@ -1,0 +1,33 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layout/layout.astro';
+import Card from '../../components/card.astro';
+
+const { tags } = Astro.params;
+type WorkPost = CollectionEntry<'work'>;
+const posts: WorkPost[] = (await getCollection('work', ({ data }: any) => {
+  return data.isDraft !== true && data.tags.includes(tags);
+}));
+---
+
+<Layout title={tags}
+  description=`All the posts related to ${tags}`
+  imagePath="https://gitlab.com/anirban-1009/anirban.codes/-/raw/main/public/images/SocialHero.jpg?ref_type=heads"
+>
+  <section class="h-screen">
+    <p class="text-4xl lg:text-5xl font-sans font-medium py-8">{tags}</p>
+    <div class="hidden md:flex lg:grid lg:grid-cols-2 lg:gap-y-10 gap-4 flex-col">
+      {
+        posts.map((post) => (
+          <Card
+            title={post.data.title}
+            description={post.data.description}
+            imagePath={post.data.imagePath}
+            link={`/work/${post.slug}/`}
+            tags={post.data.tags}
+            />
+        ))
+      }
+    </div>
+  </section>
+</Layout>

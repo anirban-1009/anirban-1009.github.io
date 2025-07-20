@@ -1,0 +1,133 @@
+---
+title: Routio
+description: This is an article about a project on route optimization.
+imagePath: "/src/images/cover/Routio.png"
+metaPath: "/images/covers/Routio.png"
+tags: ["Monorepo", "Next.js", "DjangoRestFramework"]
+date: June 10, 2024
+---
+
+You can access the application from [**here**](https://routio.vercel.app/)
+
+## Understanding the Challenge
+
+Waste management in modern cities involves complex logistics. Variations in waste volumes, dynamic traffic conditions, and the capacity of disposal points all contribute to the complexity. My goal was clear: develop a system that dynamically optimizes waste collection routes in real-time, ensuring efficiency and sustainability.
+
+## Development process
+
+Since there were 2 aspects to this projects, I researched on employing an efficient way to manage either aspects of the project i.e, Frontend and Backend. Where upon Research I stumbled upon the concept of MonoRepo.
+
+### MonoRepo
+
+> A monorepo is a single repository containing multiple distinct projects, with well-defined relationships.[^1]
+
+After thorough research, I understood that this technology and philosophy allow both the frontend and backend to be hosted on a single application. This setup enables them to run simultaneously, significantly reducing the complexity of managing two separate applications, their versions, and their codebases, all with a unified approach.
+
+After choosing Next.js and Tailwind CSS for my frontend and Django Rest Framework for my backend, TurboRepo was the obvious choice for the monorepo framework due to its seamless integration with Next.js. The entire unified repository was hosted on [GitLab](https://gitlab.com) for its easy and accessible issue tracking and collaboration features.
+
+### Software LifeCycle
+
+![Development-WorkFlow](/images/work/Routio/SDC.png)
+
+Since the Proposed Application was going to handle multiple aspects simultaneously, and had equally sizable workloads for the frontend and backend, It was essential for having a very simple and straight forward software development stratergy. Since the aspects of projects were having multiple aspects such as,
+
+**Frontend**: Map, Plotting of Routes on Map, handling multiple users, Responsive View...etc.
+
+**Backend**: Multiple users, Entity relations, Data processing, Role Based Rendering...etc
+
+It was obvious that a single branch will not be an efficient way to approach it so I settled on having 2 production branches namely,
+
+**main** : The og, which will host both Frontend and Backend latet codes, and the `apps\frontend` folder will be used to deploy the application on [vercel.com](https://vercel.com).
+
+**\_backend**: This Branch will be having the latest backend code but will not have the latest frontend code and will be hosted on [pythonanywhere.com](https://www.pythonanywhere.com/) to host the APIs.
+
+And the development cycle was like this:
+
+1. **Issue** will be created describing the Feature required to be Developed, with label mentioned between `backend & frontend` defining the development branch.
+
+2. **Merge Request** was created by creating a branch targetted towards the target branch i.e, \_brackend or main.
+
+3. **Development** was done on the created branch with developing the targetted feature and ability, and consecutive commits were made at every stage of development, after the feature was developed it was merged.
+
+4. **Pipeline** of vercel was used to build and check the frontend components before deployment, and then when it passed the checks the merge was accepted.
+
+## Login flow
+
+In this Project instead of locally setting up the entire user management system, I have used Aut0[^2] to handle user sign up, where it allows users to signup using social accounts, such as `Google`. And it also enables to use **Role Based Access Control**[^3], which enables to show different views based on different Roles, since I was expecting 2 different types of users.
+
+1. <ins>User</ins> : This is the view of the normal user who will be cattered to
+   by the service.
+2. <ins>Driver</ins> : This is the view of the Driver who will be assigned to
+   various centers, and will be able to view the route it is supposed to take.
+
+In the employed login, I have used 2 peripheral where,
+
+1. **Auth0** will handle and provide the user information and will handle the login and logout operations.
+2. **Local Database** will be storing the user information to be processed for the product, and has all the critical information for assigning them to centers, and figuring out which driver will cater to them.
+
+So every time there is a login of user from auth0, there is a check if the user is in the database of the application, if not based on the role of the user defined by auth0 it is handled. The flow is visualized below and can be found at `apps/frontend/src/app/page.tsx`[^4].
+![Login-flow](/images/work/Routio/LoginFlow.png)
+
+## Frontend
+
+At the frontend `Next.js` is being used, because of my familiarity with it and also because of it's ease of integration with `tailwind css`, before the frontend of the application was developed I researched and came up with a UI/UX design for how the product will be looking[^5], then the tough part of developing the frontend started.
+
+The components to be developed were,
+
+1. Map section
+2. Routing Capability
+3. Green Impact - A section dedicated to display the vitals of the vehicle and viewing the CO<sup>2</sup> emissions.
+4. Profile View - To view the user details, and the logout capabilities were provided here.
+5. Hamburger Menu - A overflowing hamburger view to navigate to various locations and functionalities.
+
+As illustrated below all the components were fed with the dedicated data, and were being rendered simultaneously instead of a monolothic render with changing components, and it was developed to be a SPA (Single-page application)[^6] for the primary functionalities. They can be viewed at [apps/frontend/src/app/[views]- Anirban Sikdar / routio-turborepo](https://gitlab.com/anirban-1009/routio-turborepo/-/tree/main/apps/frontend/src/app/%5Bviews%5D)
+
+| ![UserView-flow](/images/work/Routio/UserView.png) | ![DrvierView-flow](/images/work/Routio/DriverView.png) |
+| -------------------------------------------------- | ------------------------------------------------------ |
+
+## Backend
+
+In this project, I used Django Rest Framework (DRF) to manage database operations, including URL routing, viewsets, serializers, and models.
+
+1. **URLs**: Define endpoints for accessing resources, linking each pattern to a specific viewset.
+2. **Viewsets**: Handle HTTP methods (GET, POST, PUT, DELETE) and interact with models and serializers to manage data.
+3. **Serializers**: Convert complex data types to and from native Python data types, facilitating validation and data transformation.
+4. **Models**: Define the database structure, specifying fields and behaviors for stored data.
+
+The flow is as follows:
+
+1. URLs map the client's request to the appropriate viewset.
+2. Viewsets process the request, using models to fetch or modify data.
+3. Serializers convert data between the model and response format.
+
+This setup ensures a clean separation of concerns, enhancing maintainability and scalability. Details can be found in `apps/backend/`[^7]
+![DRF](/images/work/Routio/DRF.png)
+
+## Screenshots
+
+| ![driver-main-view](/images/work/Routio/driver-main-view.png) | ![Green-impact](/images/work/Routio/Green-impact.png) | ![Login-screen](/images/work/Routio/Login-screen.png) | ![Menu-section](/images/work/Routio/Menu-section.png) |
+| ------------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+
+## Impact and Future Directions
+
+My waste management optimization system has already shown significant improvements in route efficiency and cost reduction. The user-friendly interface and real-time adaptability ensure that operations remain responsive and efficient.
+
+Looking ahead, I plan to incorporate advanced analytics and machine learning to further refine route optimization. Expanding my data sources to include weather forecasts and community feedback will help improve service quality and environmental sustainability.
+
+## Conclusion
+
+Developing this waste management optimization system has been a journey of innovation and perseverance. By integrating advanced optimization algorithms with real-time data and modern web technologies, I've created a solution that addresses the complex logistical challenges of urban waste management. My methodology and development process, grounded in best practices and continuous improvement, have been key to my success. I’m excited to continue evolving my system and contributing to more sustainable and efficient waste management practices.
+
+[^1]: [What is MonoRepo?](https://monorepo.tools/#what-is-a-monorepo)
+
+[^2]: [Learn the basics and begin building your authentication solution.](https://auth0.com/docs/get-started)
+
+[^3]: [Understand the concept of role-based access control and how it applies in Auth0.](https://auth0.com/docs/manage-users/access-control/rbac)
+
+[^4]: [apps/frontend/src/app/page.tsx · main · Anirban Sikdar / routio-turborepo · GitLab](https://gitlab.com/anirban-1009/routio-turborepo/-/blob/main/apps/frontend/src/app/page.tsx)
+
+[^5]: [Figma | Created with Figma](https://www.figma.com/design/cEM60uGEJU8MBgJlFgnxkC/Design?m=auto&t=7mME81Vba8815rhs-6)
+
+[^6]: [SPA (Single-page application) - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/SPA)
+
+[^7]: [apps/backend · main · Anirban Sikdar / routio-turborepo · GitLab](https://gitlab.com/anirban-1009/routio-turborepo/-/tree/main/apps/backend)

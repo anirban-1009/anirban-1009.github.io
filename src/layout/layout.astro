@@ -1,0 +1,48 @@
+---
+import Header from "../components/header.astro";
+import Footer from "../components/footer.astro";
+import  SpeedInsights  from "@vercel/speed-insights/astro"
+
+const {title, imagePath, description} = Astro.props;
+---
+<html lang="en">
+    <head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+        <meta property="og:image" content={imagePath} />
+        <meta property="og:site_name" content="Anirban.space" />
+        <meta property="og:title" content={title} />
+        <meta property="description" content={description} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content="https://anirban.space/" />
+        <!-- twitter meta -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:image" content={imagePath} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Space+Grotesk&display=swap" rel="stylesheet">
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="Anirban.space"
+            href={new URL("rss.xml", Astro.site)}
+        />
+		<title>{title}</title>
+	</head>
+    <body>
+        <div class="text-secondary overflow-x-hidden dark:bg-black dark:text-primary">
+            <Header />
+                <div class="px-8 lg:px-16 font-space">
+                    <SpeedInsights />
+                    <slot />
+                </div>
+            <Footer />
+        </div>
+    </body>
+</html>

@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Layout from '../../layout/layout.astro';
+import Image from 'astro/components/Image.astro';
+import Prose from '../../components/prose.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post: any) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'blog'>;
+const post = Astro.props;
+const { Content } = await post.render();
+export const prerender = true;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/images/cover/*.{jpeg,jpg,png,gif,webp}');
+if (!images[post.data.imagePath]) throw new Error(`"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`);
+---
+
+<Layout title={post.data.title} imagePath=`https://www.anirban.space${post.data.metaPath}` description={post.data.description}>
+  <article>
+    <p class="py-4 lg:px-16 text-4xl lg:text-5xl lg:font-medium font-semibold">{post.data.title}</p>
+    <div class="lg:px-52">
+      <Image
+        src={images[post.data.imagePath]()}
+        height="166"
+        width="370"
+        alt={post.data.description}
+        widths={[240, 540, 720]}
+        sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
+        class="rounded-2xl lg:w-full"
+        />
+      <p class="py-4">{post.data.date}</p>
+      <Prose >
+        <div class="lg:w-screen lg:max-w-full">
+          <Content />
+        </div>
+      </Prose>
+    </div>
+  </article>
+</Layout>

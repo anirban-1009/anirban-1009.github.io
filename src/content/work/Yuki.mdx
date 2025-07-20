@@ -1,0 +1,67 @@
+---
+title: "Yuki"
+imagePath: "/src/images/cover/RPi.jpg"
+description: "Building an Open-Source Delta X Robot for Tomato Picking"
+metaPath: "/images/covers/RPi.jpg"
+
+tags: ["Raspberry Pi", "OpenCV", "IoT", "TensorFlow"]
+date: Apr 10, 2023
+---
+
+## How to Build an Emotion Recognition Bot with Raspberry Pi and Google Cloud
+
+Emotion recognition technology is becoming increasingly sophisticated, and it is now possible to build a bot that can detect human emotions and respond accordingly. In this blog post, we will walk through the process of building an emotion recognition bot using a Raspberry Pi, Pi camera, Google Cloud, and OLED screens.
+The Basics
+
+![FrontImage](/images/work/yuki/Front.jpg)
+
+The bot will consist of three main components:
+
+    * **A Raspberry Pi**: The Raspberry Pi is a small, inexpensive computer that is perfect for this project. It will be responsible for running the software that detects facial expressions and responds with different reactions.
+    * **A Pi camera**: The Pi camera will be used to capture images of people's faces. The images will then be sent to Google Cloud for facial expression recognition.
+    * **OLED screens**: The OLED screens will be used to display the bot's reactions.
+
+## The Software
+
+The software for the bot will be written in Python. The first step is to install the necessary libraries and modules. We will need the following libraries:
+
+    * **picamera**: This library is used to control the Pi camera.
+    * **numpy**: This library is used for mathematical operations.
+    * **tensorflow**: This library is used to train and run machine learning models.
+    * **google-cloud-vision**: This library is used to interact with the Google Cloud Vision API.
+
+Once the libraries are installed, we can start writing the code. The first step is to initialize the Raspberry Pi camera and OLED screens. Then, we can load the facial expression recognition model from Google Cloud. Finally, we can start a loop that detects facial expressions and responds with different reactions.
+
+The reactions that the bot can display are:
+
+    **Happy**: The bot will create a set of arcs on it screens depecting it's partially closing eyes and expressing it's happy.
+
+![Happy](/images/work/yuki/Reaction.jpg)
+
+## How it works
+
+![Yuki](/images/work/yuki/Yuki.png)
+
+    * *Capturing Images* - Yuki uses RpiCamera to capture images and feed it to the Raspberry pi Zero W.
+    * *Face Detection* - On the feeded stream of video to the RPi, it uses the HaarCascade and OpenCV to detect Human Frontal Face[^1].
+    * *Detecting Emotions* - On sucessful detection of human frontal face on the camera, forward the frame to the Google Cloud Vision[^2] to detect the emotion.
+    * *Yuki Response* - Based on the response from the Google Cloud Vision and it's detection, Yuki responses with a relevent expression.
+
+## The Conclusion
+
+This project is a great way to learn about facial expression recognition, Raspberry Pi, Google Cloud, and OLED screens. The bot can be used as a companion to help people feel better and improve their psychological state. It can also be used for research purposes to study human emotions.
+
+In addition to the basic components and reactions described above, here are some other things you can add to your emotion recognition bot project:
+
+    More emotions: You can train the bot to recognize more emotions, such as surprise, fear, and disgust.
+    Different reactions: You can also add different reactions to the bot, such as making different facial expressions, playing different sounds, or saying different words.
+    Portability: You can make the bot more portable by using a battery pack to power it. This way, you can take the bot with you wherever you go.
+    Speech recognition: You can add speech recognition to the bot so that it can respond to your voice commands. This can make the bot more interactive and user-friendly.
+
+I hope you enjoyed this blog post!
+
+---
+
+[^1]: [Haar Cascade Object Detection Face & Eye OpenCV Python Tutorial](https://pythonprogramming.net/haar-cascade-face-eye-detection-python-opencv-tutorial/)
+
+[^2]: [Use Google cloud Vision on Raspberry Pi](https://www.dexterindustries.com/howto/use-google-cloud-vision-on-the-raspberry-pi/)

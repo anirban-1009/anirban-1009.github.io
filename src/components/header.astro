@@ -1,0 +1,13 @@
+---
+import Hamburger from "./Hamburger.astro";
+---
+
+<nav class="flex h-16 lg:h-20 bg-white dark:bg-secondary px-8 items-center font-sans justify-between rounded-b-2xl">
+    <a class="font-bold text-2xl lg:text-4xl" href="/">Anirban.space</a>
+    <Hamburger />
+    <div class="hidden lg:flex gap-8 font-semibold lg:text-lg">
+        <a href="/about">About</a>
+        <a href="/blogs">Blogs</a>
+        <a href="/work">Works</a>
+    </div>
+</nav>

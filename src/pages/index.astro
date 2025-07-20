@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from "astro:content";
+import Slide from "../components/slide.astro";
+import Layout from "../layout/layout.astro";
+
+const posts = (await getCollection('work', ({ data }: any) => {
+  return data.isDraft !== true;
+})).sort((a: any, b: any) => {
+  const dateA = new Date(a.data.date); // Manual conversion
+  const dateB = new Date(b.data.date); // Manual conversion
+  return dateB.getTime() - dateA.getTime();
+});
+
+const HeadText = "I am an Aspiring AI & ML Engineer, here I share myself with you, and everything I am working on or have been up to.";
+const AboutText = "Hi, I’m Anirban Sikdar, an undergrad passionate about Computer Science, AI, and ML. My interests span Image Processing, Robotics, Deep Space, and Astronomy. I excel in visualizations and interactive systems, I’m skilled in Python, JavaScript, and Cloud Computing. My projects range from responsive hospital system views to Delta robots for tomato sorting. I also served as Student Dean and Head of Google Technologies. Outside of tech, I’m fascinated by Space Tech, Orbital Mechanics, and Formula 1."
+const metaDescription = "Captivating portfolio of an undergrad tech enthusiast. Anirban Sikdar's projects range from AI-powered hospital views to robotics for agriculture. Skilled in Python, JavaScript, and cloud, his interests span computer science, aerospace, and Formula 1."
+---
+<Layout title='Anirban.space' imagePath='https://gitlab.com/anirban-1009/anirban.codes/-/raw/main/public/images/SocialHero.jpg?ref_type=heads' description={metaDescription}>
+	<!-- Head Section -->
+	<div class="w-full flex flex-col gap-4">
+		<!-- Image Section for mobile view -->
+		<div class="flex lg:hidden justify-center my-4">
+			<Image
+				src="/images/heros/HeroImage.jpg"
+				alt="Hero"
+				width="208"
+				height="208"
+				loading="eager"
+				class="rounded-full"
+			/>
+		</div>
+		<!-- Hero Section Desktop -->
+		<div class="lg:flex lg:justify-between lg:py-8">
+			<div class="lg:my-auto flex flex-col gap-4">
+				<p class="text-4xl font-bold text-primary font-sans">Anirban Sikdar</p>
+				<p class="lg:text-lg lg:max-w-[700px]">{HeadText}</p>
+				<!-- Button -->
+				<div class="flex w-full justify-center lg:justify-start">
+					<a class="flex h-12 w-64 bg-secondary dark:bg-primary rounded-xl justify-center text-white items-center" href="/work">
+						Notable Work
+					</a>
+				</div>
+			</div>
+			<div class="hidden lg:flex justify-center my-4">
+				<!-- Image for Desktop view -->
+				<Image
+					src="/images/heros/HeroImage.jpg"
+					alt="Hero"
+					width="256"
+					height="256"
+					loading="eager"
+					class="rounded-full"
+				/>
+			</div>
+		</div>
+	</div>
+	<!-- My Work -->
+	<div class="my-12">
+		<p class="text-4xl font-bold font-sans text-primary">My Work</p>
+		<!-- Desktop View -->
+		<div class="py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+			{posts.slice(0,3).map((post: any) => (
+				<Slide
+					title={post.data.title}
+					link={post.slug}
+					description={post.data.description}
+					imagePath={post.data.imagePath}
+					tags={post.data.tags}
+				/>
+			))}
+		</div>
+	 </div>
+	<!-- About Section -->
+	<div class="flex lg:justify-between flex-col my-12 gap-8">
+		<p class="lg:hidden text-4xl font-bold font-sans text-primary">About Me</p>
+		<div class="flex flex-col lg:flex-row lg:justify-between lg:gap-24 gap-8">
+			<!-- About Hero Image Section -->
+			<div class="flex justify-center lg:min-w-80">
+				<Image
+					src="/images/heros/HomeAboutHero.webp"
+					alt="About Hero"
+					width="300"
+					height="300"
+					class="rounded-3xl shadow-img-light lg:w-full"
+					loading="lazy"
+				/>
+			</div>
+			<!-- About Hero Text Desktop View-->
+			<div class="flex flex-col gap-4 lg:p-10">
+				<p class="hidden lg:block text-4xl font-bold font-sans text-primary">About Me</p>
+				<p class="lg:text-lg">{AboutText}</p>
+				<div class="flex flex-col lg:flex-row gap-8 lg:gap-4">
+					<!-- Button -->
+					<div class="flex w-full lg:w-auto justify-center">
+						<a class="flex h-12 w-64 bg-secondary dark:bg-primary rounded-xl justify-center text-white items-center" href="/about">
+							More.
+						</a>
+					</div>
+					<!-- Button -->
+					<div class="flex w-full lg:w-auto justify-center">
+						<a class="flex h-12 w-64 bg-white dark:bg-black border-primary border rounded-xl justify-center items-center" href="Anirban_Sikdar.pdf">
+							Resume
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</Layout>
