@@ -41,9 +41,8 @@ const {title, imagePath, description} = Astro.props;
             <Header />
                 <div class="px-8 lg:px-16 font-space">
                     <SpeedInsights />
-                    <Analytics>
-                        <slot />
-                    </Analytics>
+                    <Analytics />
+                    <slot />
                 </div>
             <Footer />
         </div>
