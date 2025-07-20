@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import { getCollection } from "astro:content";
 import Slide from "../components/slide.astro";
 import Layout from "../layout/layout.astro";
-
 const posts = (await getCollection('work', ({ data }: any) => {
   return data.isDraft !== true;
 })).sort((a: any, b: any) => {

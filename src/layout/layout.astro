@@ -1,7 +1,8 @@
 ---
-import Header from "../components/header.astro";
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from "@vercel/speed-insights/astro";
 import Footer from "../components/footer.astro";
-import  SpeedInsights  from "@vercel/speed-insights/astro"
+import Header from "../components/header.astro";
 
 const {title, imagePath, description} = Astro.props;
 ---
@@ -40,7 +41,9 @@ const {title, imagePath, description} = Astro.props;
             <Header />
                 <div class="px-8 lg:px-16 font-space">
                     <SpeedInsights />
-                    <slot />
+                    <Analytics>
+                        <slot />
+                    </Analytics>
                 </div>
             <Footer />
         </div>
