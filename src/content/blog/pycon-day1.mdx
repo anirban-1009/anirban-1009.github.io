@@ -1,0 +1,106 @@
+---
+title: PyCon India Day 1
+description: In this blog, I am sharing the things I was upto during PyCon India 2025.
+imagePath: "/src/images/cover/pycon-cover-day1.png"
+date: June 09, 2023
+metaPath: "/src/images/cover/pycon-cover-day1.png"
+---
+
+# What is it?
+
+PyCon India 2025 isn’t just a tech conference—it’s a vibrant festival where Python enthusiasts from all backgrounds come together to share knowledge, solve problems, and celebrate their shared passion. Imagine spontaneous group discussions in informal “open spaces,” where everyone from beginners to seasoned developers can connect over their favorite frameworks, brainstorm project ideas, or simply chat about the joys and challenges of coding life. Whether learning from inspiring lightning talks, collaborating in high-energy coding sprints, or just geeking out over Python swag, attendees discover that the real magic of PyCon India lies in its community spirit: a place where professional growth, friendship, and fun naturally go hand in hand.
+
+# When and Where is it?
+
+PyCon India 2025 took place in Bengaluru from September 12th to 15th, 2025. The event spanned multiple venues: workshops were held at St. Francis College on September 12th, the main conference happened at NIMHANS Convention Centre on September 13th and 14th, and developer sprints took place at Scaler School of Technology on September 15th.
+
+# Lint Like Lightning [^1]
+
+[Urvashi Choubey](https://www.linkedin.com/in/urvashi-choubey/)
+
+The first session I attended was all about linting, which very much caught my curiosity since I like code is well structured and looks amazing.
+Since the surge of A.I. the code which can be reffered to don't really form to the idea of clean code, It was refreshing to participate in a conversation about why linting is important.
+In this talk Urvashi explained and helped us understand the importance of pylinting tools like ruff and also she explained about the `pre-commit` hooks which can be integrated with CI/CD
+pipeline to check the code which was a compelling idea for code maintained across multiple contributors. Here she also went on to stress on the fact that having just a CI/CD pipeline
+is not enough it should be scalable in the priciple of it's development.
+
+Then we also ventured into how docker is inefficient when the code is observing minimal changes, where the entire code needs to be complied again even small changes. This principle is known as composability.
+
+We were introduced to **Dagger** for addressing all these problem, where urvashi demonstrated that this too can be used to compile only small part of the codebase. There was also a demonstraction about the re-useable functions which it provides.
+
+# Mastering Prompts with Feedback and Pydantic [^2]
+
+![Pydantic session](/images/blogs/pycon/day1/pydantic-session.png)
+
+- [Mahima Arora](https://www.linkedin.com/in/mahimaarora25/)
+- [Aarti jha](https://www.linkedin.com/in/aartijha22/)
+
+The second session I attended was titled “Mastering Prompts with Feedback and Pydantic” and it turned out to be a real eye-opener. I’ve always leaned towards using dataclasses—which in my opinion are still underrated—but seeing how **Pydantic** could be leveraged in prompt engineering was fascinating.
+The speaker introduced a project that focuses on generating consistent and structured outputs from LLMs, something I often struggle with when moving from local experiments to deployment.
+
+I even asked a question about reproducing consistent results across different environments, but the answer was a reminder that absolute consistency isn’t really achievable due to the nature of LLMs.
+What really caught me by surprise, though, was the significant improvement once an evaluation layer was added.
+The talk also touched on guardrails and Pydantic’s field validation, which felt like an elegant way to keep outputs in check while still giving space for flexibility.
+
+# Lightning Talks
+
+Later in the day, I joined the lightning talks, which were packed with a variety of short but impactful sessions. What I really enjoyed was the fast-paced energy—every speaker had only a few minutes, but the ideas they shared were enough to leave me thinking long after. It even motivated me to consider giving a talk myself, maybe starting with my local community, which feels like the right step forward.
+
+Among the many talks, a few really stood out. The introduction to **Crabviz** was a fresh perspective on visualization, and I found myself curious about where I could apply it in my own projects. Then there was **DeepWiki**, which caught my attention for how it structures knowledge in a more interactive way. Another quick but insightful talk was on **interpolation in Python**, something I’d often taken for granted but now saw in a new light with implimentation using classes.
+
+One of the more advanced demos was around **dspy.ai**, where they walked us through signatures, modules, and optimizers. What clicked with me was how creating a prompt with dspy.Signature felt very similar to working with Pydantic—structured, validated, and clean. The fact that docstrings play a crucial role in defining behavior was another neat takeaway. It tied back nicely to the earlier session on prompting, reinforcing how important structure is when working with LLMs.
+
+## Scaling python for image processing[^3]
+
+Another session I attended was on Scaling Python for Image Processing, and it dove deep into the practical side of working with large amounts of visual data.
+The focus was on image segmentation, where an image is broken down into smaller pieces and mapped to different categories that can be detected.
+What I found interesting was the systematic approach they shared: starting with an input segmentation map, then finding connected components, and finally drawing bounding boxes by calculating the maximum rectangle for each component.
+
+It was a clean, step-by-step breakdown that made the whole concept much easier to digest. The session also highlighted how using a thread pool can significantly speed up processing, especially when handling high-resolution images at scale.
+For me, it was a great reminder of how Python—despite not being the “fastest” language—can still be scaled efficiently when combined with the right techniques.
+
+## Navigating Real-World Challenges in a Production-Grade Multi-Agent System[^4]
+
+- [Sibin Bhaskaran](https://www.linkedin.com/in/sibinbh/)
+
+One of the most insightful sessions I attended was Navigating Real-World Challenges in a Production-Grade Multi-Agent System.
+This talk was all about moving beyond prototypes and actually running LLM-powered systems at scale.
+A key theme was **guardrails**—how to keep systems reliable, secure, and efficient.
+Some practical strategies included implementing **programmatic RBAC**, following the principle of delegating responsibilities to the smallest possible unit (sub-GKE responsibility), and always validating LLM responses before moving them further down the pipeline.
+I really liked how they emphasized integration with CI/CD for evaluation, which felt like a natural extension of the earlier linting session.
+
+The talk was also full of optimization tips: minimize the number of LLM calls, parallelize tool executions, use streaming for reduced latency, and prefer smaller models whenever possible.
+There was also a strong focus on smart resource management, like prompt compression and caching to avoid redundant calls.
+
+Finally, the speaker hammered home the importance of logging everything—from input and output tokens to latency, cost, and even cache hits versus misses.
+They even suggested adding runtime quality checks by asking the LLM itself to classify responses as answered, partially answered, or unanswered.
+Paired with structured prompting and consistent output formats, these practices painted a realistic picture of what it takes to operate multi-agent systems in production without them turning chaotic.
+
+## DuckDB is the New Pandas [^5]
+
+![Beyond Pandas](/images/blogs/pycon/day1/beyond-pandas.png)
+
+Another highlight of the conference for me was the talk “DuckDB is the New Pandas” by Anand S. Right from the start, the energy in this session was different—Anand had prepared shell scripts for each slide and ran them live, which made the whole talk incredibly interactive.
+But beyond the cool demos, it was his style of oration that kept everyone hooked—clear, engaging, and full of practical insights.
+
+What stood out the most was how DuckDB makes data interaction so simple and approachable. Anand showed how easily it could even be integrated with LLM workflows, which was something I hadn’t considered before.
+It really left me thinking that if I want to explore data analysis more deeply, I shouldn’t restrict myself to just Pandas.
+The simplicity and embedded nature of DuckDB, and also other alternative like FireDB made me realize that there’s a whole world of possibilities waiting to be explored.
+
+## Wrapping Up an Inspiring Day at the Conference
+
+![Me](/images/blogs/pycon/day1/me.png)
+As the day wrapped up, I couldn’t help but feel both exhausted and energized at the same time.
+Each session had given me something new to think about—from clean code practices and structured prompting, to scaling image processing, multi-agent production challenges, and finally Anand’s brilliant take on DuckDB.
+It was one of those days where my notebook was overflowing with ideas, and yet the bigger impact was the motivation to explore, experiment, and even contribute back to the community.
+Walking out, I realized that conferences like these aren’t just about learning new tools or frameworks—they’re about perspective, inspiration, and being reminded that there’s always more to discover in the Python ecosystem.
+
+[^1]: [Lint Like Lightning, Deploy Like a Ninja: Ruff + Dagger in Action](https://cfp.in.pycon.org/2025/talk/UYF3PD/)
+
+[^2]: [Mastering Prompts with Feedback and Pydantic](https://cfp.in.pycon.org/2025/talk/S3TDZB/)
+
+[^3]: [Scaling python for image processing](https://cfp.in.pycon.org/2025/talk/MERDPA/)
+
+[^4]: [Navigating Real-World Challenges in a Production-Grade Multi-Agent System](https://cfp.in.pycon.org/2025/talk/8H8MBB/)
+
+[^5]: [DuckDB is the New Pandas](https://cfp.in.pycon.org/2025/talk/W8VJX3/)
