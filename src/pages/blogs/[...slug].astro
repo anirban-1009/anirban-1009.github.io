@@ -22,7 +22,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/src/images/cover/*
 if (!images[post.data.imagePath]) throw new Error(`"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`);
 ---
 
-<Layout title={post.data.title} imagePath=`https://www.anirban.space${post.data.metaPath}` description={post.data.description}>
+<Layout title={post.data.title} imagePath=`https://anirban-1009.vercel.app/${post.data.metaPath}` description={post.data.description}>
   <article>
     <p class="py-4 lg:px-16 text-4xl lg:text-5xl lg:font-medium font-semibold">{post.data.title}</p>
     <div class="lg:px-52">
