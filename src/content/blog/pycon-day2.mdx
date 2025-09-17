@@ -1,0 +1,90 @@
+---
+title: PyCon India Day 2
+description: In this blog, I am sharing the things I was upto during PyCon India 2025.
+imagePath: "/src/images/cover/pycon-cover-day2.png"
+date: September 16, 2025
+metaPath: "images/cover/pycon-cover-day2.png"
+---
+
+# Day 2 at PyCon India 2025: Diving In After a Thrilling First Solo Day
+
+Day 2 at PyCon India 2025 began with a sense of anticipation I hadn’t expected.
+Yesterday was my first solo experience at a major conference—exciting, exhilarating, and admittedly a little intimidating.
+I spent most of the day moving between sessions, scribbling notes, and wondering if I could really strike up conversations with new people.
+That mix of curiosity and nervousness carried into today, but it felt different—more like a challenge I was ready to embrace.
+With the confidence of having navigated Day 1, I dove into a lineup of talks that promised both technical depth and fresh perspectives, eager to push my learning further and make meaningful connections along the way.
+
+## Keynote 3
+
+- [Katharine Jarmul](https://www.linkedin.com/in/katharinejarmul/)
+
+![keynote-3](/images/blogs/pycon/day2/keynote-3.jpg)
+
+The first session I attended on Day 2 was the keynote by **Katherine**, and it set a thought-provoking tone for the day.
+Her talk focused on data privacy and the ways in which LLMs can be misused as tools for propaganda.
+Beyond the technical discussion—covering topics like Wooters coding theory, Claude Shannon’s information theory, VC dimension, PAC learning, and differential privacy—Katherine highlighted deeper questions about technology’s role in society.
+She explored challenges like overparameterization, memorization versus generalization, and the limits of central control, emphasizing the need to pursue real science even in AI research.
+
+What made the session even more memorable was the conversation afterwards.
+We discussed how technology can serve as a form of protest, and how community involvement is critical to ensuring AI benefits society rather than manipulates it.
+It was a powerful reminder that learning about algorithms and models is only one part of the picture—understanding their societal impact is just as essential.
+
+## Advanced GIL Mitigation Patterns [^1]
+
+- [Rohan Giriraj](https://www.linkedin.com/in/rohan-giriraj/)
+
+![GIL session](/images/blogs/pycon/day2/GIL-session.jpg)
+
+The next session I attended was one I had been eagerly anticipating: a deep dive into Python’s **Global Interpreter Lock (GIL)**.
+Having struggled with multi-threading issues myself, I was genuinely excited to see a core Python topic take the spotlight, especially in a conference buzzing with the latest generative AI sessions.
+The talk clarified why Python can only process one thread at a time—primarily to simplify memory management, ease integration with C, and support other Python extensions.
+While Python offers concurrency, true parallel processing remains limited, and multi-threading often becomes memory-heavy due to new interpreter instances.
+
+The session also covered practical ways to mitigate these limitations: writing parallel programs in languages like C, C++, or Rust for maximum performance, using Cython, or leveraging OpenMP for multi-processing.
+It was a relief and a joy to see core Python mechanics discussed in depth, and it reminded me that understanding these foundational topics is just as important as keeping up with the latest frameworks or tools.
+
+## Understanding Plugin Architecture for Python Packages[^2]
+
+- [Ashish Shukla](https://www.linkedin.com/in/ash2shukla/)
+
+![Plugin-sesion](/images/blogs/pycon/day2/plugin-session.jpg)
+The next session I attended was on plugins in Python, and the anticipation in the room was palpable even before it began.
+People were so eager to attend that some were sitting on the steps and in the aisles.
+I couldn’t help but imagine how nerve-wracking it would be to present to such a crowd—but Ashish Shukla handled it with incredible calm, which was truly inspirational.
+The session focused on how plugins can keep applications slim, extensible, and maintainable by decoupling core logic while enabling integration with other applications without adding overhead.
+
+He highlighted practical examples like SQLAlchemy, which supports multiple dialects for integration with different platforms, and explained how to use importlib.metadata to build plugin loaders, validate package metadata, and manage entry points for integrating additional plugins.
+Tools like Typer and using a notifier within a plugin were also discussed.
+It was an intriguing session that showed how well-structured plugins can make complex applications easier to manage and extend—something I can already see myself experimenting with in my own projects.
+
+## Building MCP [^3]
+
+- [Jayesh Sharma](https://www.linkedin.com/in/wjayesh/)
+
+![building-mcp](/images/blogs/pycon/day2/lessons-MCP.jpg)
+
+The next session I attended was by Jayesh, and even before the technical details, I found myself inspired by his eloquent, well-paced style of speaking—a quality I hope to cultivate in my own presentations one day.
+The session focused on MCPs (Multi-Component Pipelines), specifically how Composio built theirs for efficiency and usability.
+One of the most intriguing takeaways was the emphasis on having a dependency graph of MCP tools, allowing parallel execution whenever possible instead of sequential calls.
+This approach not only improves performance but also highlights the importance of anticipating tool access by adding a memory layer, making workflows faster and smoother.
+Jayesh also stressed keeping authentication simple for a smoother user experience, using as many custom tools as needed, and sandboxing the MCP environment t limit access and maintain security.It was a session that combined both technical depth and practical design principles, and it left me thinking about how small, thoughtful decisions in workflo architecture can significantly impact efficiency and usabiliy.
+
+## An Ode to the experience
+
+|                                                        |                                                        |                                                                    |                                                                  |
+| ------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| ![aws-goodie](/images/blogs/pycon/day2/aws-goodie.jpg) | ![bag-goodie](/images/blogs/pycon/day2/bag-goodie.jpg) | ![botanical-garden](/images/blogs/pycon/day2/botanical-garden.jpg) | ![ode-to-the-city](/images/blogs/pycon/day2/ode-to-the-city.jpg) |
+
+Bengaluru was nothing short of enchanting—a city that felt alive yet welcoming, bustling yet calm, and warm enough to make even a first-time solo traveler feel at ease.
+The environment was inspiring, and every corner seemed to encourage curiosity and exploration.
+I’m immensely grateful to Seanergy.ai for supporting and inspiring me to attend events like this, and for helping facilitate all my requirements, making the experience seamless.
+The conference floor itself was an adventure—interacting with multiple booths, exploring initiatives from AWS and other communities, and, of course, collecting an impressive stash of goodies.
+I’m now at full capacity on sticker supply, though I did regret forgetting my umbrella, ironically one of the giveaways! With a bit of courage, I even struck up conversations with strangers, and everyone I met was welcoming and open to networking, which made the day all the more memorable.
+
+---
+
+[^1]: [Beyond the Basics - Advanced GIL Mitigation Patterns](https://cfp.in.pycon.org/2025/talk/YY8HLK/)
+
+[^2]: [Understanding Plugin Architecture for Python Packages](https://cfp.in.pycon.org/2025/talk/U3TRT9/)
+
+[^3]: [Lessons From The Trenches: Building Rube](https://cfp.in.pycon.org/2025/talk/8UQU8U/)
