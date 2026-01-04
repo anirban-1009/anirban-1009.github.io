@@ -7,7 +7,7 @@ import vercel from "@astrojs/vercel/serverless";
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://anirban-1009.vercel.app/",
+    site: "https://anirbansikdar.com/",
     base: "/",
     integrations: [tailwind(), icon(), mdx()],
     output: "server",

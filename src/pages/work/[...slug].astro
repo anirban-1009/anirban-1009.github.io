@@ -1,32 +1,41 @@
 ---
-import Image from 'astro/components/Image.astro';
-import type { CollectionEntry } from 'astro:content';
-import { getCollection } from 'astro:content';
-import Prose from '../../components/prose.astro';
-import Layout from '../../layout/layout.astro';
+import Image from "astro/components/Image.astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import Prose from "../../components/prose.astro";
+import Layout from "../../layout/layout.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('work');
+  const posts = await getCollection("work");
   return posts.map((post: any) => ({
     params: { slug: post.slug },
     props: post,
   }));
 }
 
-type Props = CollectionEntry<'work'>;
+type Props = CollectionEntry<"work">;
 const post = Astro.props;
 const { Content } = await post.render();
 export const prerender = true;
 
-
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/images/cover/*.{jpeg,jpg,png,gif}');
-if (!images[post.data.imagePath]) throw new Error(`"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`);
-
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/images/cover/*.{jpeg,jpg,png,gif}",
+);
+if (!images[post.data.imagePath])
+  throw new Error(
+    `"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`,
+  );
 ---
 
-<Layout title={post.data.title} imagePath=`https://anirban-1009.vercel.app/${post.data.metaPath}` description={post.data.description}>
+<Layout
+  title={post.data.title}
+  imagePath=`https://anirbansikdar.com/${post.data.metaPath}`
+  description={post.data.description}
+>
   <article>
-    <p class="py-4 lg:px-16 text-4xl lg:text-5xl lg:font-medium font-semibold">{post.data.title}</p>
+    <p class="py-4 lg:px-16 text-4xl lg:text-5xl lg:font-medium font-semibold">
+      {post.data.title}
+    </p>
     <div class="lg:px-52">
       <Image
         src={images[post.data.imagePath]()}
@@ -36,21 +45,23 @@ if (!images[post.data.imagePath]) throw new Error(`"${post.data.imagePath}" does
         widths={[240, 540, 720]}
         sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
         class="rounded-2xl lg:w-full"
-        />
+      />
       <p class="py-4">{post.data.date}</p>
-      {post.data.tags && post.data.tags.length > 0 && (
-        <div class="hidden md:flex flex-row gap-3">
-        {post.data.tags.map((tag: any) => (
-            <a
-            class="h-auto w-fit px-3 rounded-lg border border-primary text-primary"
-            href={`/tag/${tag}`}
-            >
-            {tag}
-            </a>
-        ))}
-        </div>
-    )}
-      <Prose >
+      {
+        post.data.tags && post.data.tags.length > 0 && (
+          <div class="hidden md:flex flex-row gap-3">
+            {post.data.tags.map((tag: any) => (
+              <a
+                class="h-auto w-fit px-3 rounded-lg border border-primary text-primary"
+                href={`/tag/${tag}`}
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        )
+      }
+      <Prose>
         <div class="lg:w-screen lg:max-w-full">
           <Content />
         </div>
