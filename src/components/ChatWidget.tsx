@@ -162,7 +162,7 @@ export default function ChatWidget() {
         <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
             {/* Chat Window */}
             {isOpen && (
-                <div className="mb-4 w-[350px] md:w-[400px] h-[500px] bg-white dark:bg-black-secondary border border-gray-200 dark:border-secondary rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in slide-in-from-bottom-5">
+                <div className="fixed inset-0 z-[100] md:absolute md:bottom-20 md:right-0 md:inset-auto w-full h-full md:w-[400px] md:h-[600px] bg-white dark:bg-black-secondary md:border border-gray-200 dark:border-secondary md:rounded-2xl shadow-none md:shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in slide-in-from-bottom-5 fade-in-0">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white flex justify-between items-center" style={{ background: 'linear-gradient(to right, #2563eb, #9333ea)', color: 'white' }}>
                         <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -261,7 +261,7 @@ export default function ChatWidget() {
             {/* Toggle Button */}
             <button
                 onClick={toggleChat}
-                className={`h-14 w-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${isOpen ? 'bg-gray-200 dark:bg-secondary text-gray-600 dark:text-white rotate-90' : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'}`}
+                className={`h-14 w-14 rounded-full shadow-lg items-center justify-center transition-all duration-300 hover:scale-110 ${isOpen ? 'hidden md:flex bg-gray-200 dark:bg-secondary text-gray-600 dark:text-white rotate-90' : 'flex bg-gradient-to-r from-blue-600 to-purple-600 text-white'}`}
                 style={!isOpen ? { background: 'linear-gradient(to right, #2563eb, #9333ea)', color: 'white' } : undefined}
                 aria-label="Toggle chat"
             >
