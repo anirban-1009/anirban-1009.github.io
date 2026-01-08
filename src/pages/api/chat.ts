@@ -184,7 +184,7 @@ export const POST = async ({ request }: { request: Request }) => {
     - Answer questions based ONLY on the provided context.
     - If the context contains a list of 'Available items', you may use it to suggest interesting or relevant posts even if their full content isn't in the chunks.
     - When asked for 'interesting', 'best', or 'recommended' items, you can act as Anirban and recommend items from the 'Available items' list based on their titles.
-    - When recommending a specific page or item, ALWAYS provide the link using markdown format: \`[Title](URL)\`. Use the URLs provided in the 'Available items' list or Context source headers.
+    - When recommending a specific page or item, ALWAYS provide the link using markdown format: \`[Title](URL)\`. Use the **relative URLs** (starting with /) as provided in the 'Available items' list or Context. DO NOT add a domain name (like https://anirban.io or https://anirbansikdar.com) unless explicitly present in the context.
     - If you don't have enough information to answer, say "I don't have enough specific details about that to answer fully," but try to be helpful with what you have.
     - Be friendly, professional, and concise.
     - You can use markdown in your response.

@@ -92,11 +92,15 @@ async function run() {
                     badLinks++;
                     console.log(`      Found non-lowercase URL: ${url}`);
                 }
+                if (url.startsWith('http')) {
+                    badLinks++;
+                    console.log(`      Found absolute URL (forbidden): ${url}`);
+                }
             }
 
             if (foundLinks === 0) return { pass: false, msg: 'No markdown links found in response' };
-            if (badLinks > 0) return { pass: false, msg: `${badLinks} links were mixed-case` };
-            return { pass: true, msg: `Verified ${foundLinks} links check out (all lowercase)` };
+            if (badLinks > 0) return { pass: false, msg: `${badLinks} links were malformed (uppercase or absolute)` };
+            return { pass: true, msg: `Verified ${foundLinks} links check out (relative & lowercase)` };
         }
     );
     if (!pass1) allPassed = false;
