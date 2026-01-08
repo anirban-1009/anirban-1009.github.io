@@ -18,7 +18,19 @@ function getVersion() {
  */
 function getLatestTag() {
     try {
-        return execSync('git describe --tags --abbrev=0', { encoding: 'utf8' }).trim();
+        // Get all tags sorted by creatordate
+        const tags = execSync('git tag --sort=-creatordate', { encoding: 'utf8' }).trim().split('\n');
+
+        // If we just created a tag (HEAD is tagged), we want the one BEFORE it
+        const headHash = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+        // Use ^{} to peel the tag and get the referenced commit hash
+        const tagHash = execSync(`git rev-parse ${tags[0]}^{}`, { encoding: 'utf8' }).trim();
+
+        if (headHash === tagHash && tags.length > 1) {
+            return tags[1]; // Return previous tag
+        }
+
+        return tags[0] || null;
     } catch (error) {
         return null; // No tags yet
     }
@@ -28,13 +40,19 @@ function getLatestTag() {
  * Get commits since last tag
  */
 function getCommitsSinceLastTag() {
-    const latestTag = getLatestTag();
-    const range = latestTag ? `${latestTag}..HEAD` : 'HEAD';
+    const previousTag = getLatestTag();
+    // If there is a previous tag, get commits from it to HEAD
+    // If no previous tag, get all commits
+    const range = previousTag ? `${previousTag}..HEAD` : '';
+
+    console.log(`Generating changelog for range: ${range || 'ALL COMMITS'}`);
 
     try {
-        const commits = execSync(`git log ${range} --pretty=format:"%s|%h|%an|%ad" --date=short`, {
-            encoding: 'utf8'
-        }).trim();
+        const cmd = range
+            ? `git log ${range} --pretty=format:"%s|%h|%an|%ad" --date=short`
+            : `git log --pretty=format:"%s|%h|%an|%ad" --date=short`;
+
+        const commits = execSync(cmd, { encoding: 'utf8' }).trim();
 
         if (!commits) return [];
 
@@ -43,6 +61,7 @@ function getCommitsSinceLastTag() {
             return { message, hash, author, date };
         });
     } catch (error) {
+        console.error('Error getting commits:', error);
         return [];
     }
 }
