@@ -29,7 +29,12 @@ if (!images[post.data.imagePath])
 
 const imagePromise = images[post.data.imagePath]();
 const imageData = (await imagePromise).default;
-const optimizedImage = await getImage({ src: imageData, format: "png" });
+const optimizedImage = await getImage({
+  src: imageData,
+  format: "png",
+  width: 1200,
+  height: 630,
+});
 const ogImageUrl = new URL(
   optimizedImage.src,
   Astro.site || "https://anirbansikdar.com",
