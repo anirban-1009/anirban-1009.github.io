@@ -16,7 +16,6 @@ const SUSPICIOUS_PATTERNS = [
 const SPAM_PATTERNS = [
     /(.)\1{10,}/, // Repeated characters
     /https?:\/\//gi, // URLs (multiple)
-    /@\w+/g, // Email addresses
 ];
 
 export interface ValidationResult {
@@ -46,14 +45,10 @@ export function validateMessage(message: string): ValidationResult {
     }
 
     // Check for spam patterns
-    const urlMatches = message.match(/https?:\/\//gi);
-    if (urlMatches && urlMatches.length > 2) {
-        return { isValid: false, reason: 'Too many URLs in message' };
-    }
-
-    // Check for excessive repetition
-    if (/(.)\1{20,}/.test(message)) {
-        return { isValid: false, reason: 'Excessive character repetition' };
+    for (const pattern of SPAM_PATTERNS) {
+        if (message.search(pattern) !== -1) {
+            return { isValid: false, reason: 'Message contains spam content' };
+        }
     }
 
     return { isValid: true };
