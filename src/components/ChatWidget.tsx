@@ -32,10 +32,29 @@ export default function ChatWidget() {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
 
+        // Client-side validation
+        const trimmed = input.trim();
+
+        if (trimmed.length === 0) {
+            return;
+        }
+
+        if (trimmed.length > 500) {
+            alert('Message is too long. Please keep it under 500 characters.');
+            return;
+        }
+
+        // Prevent excessive URLs
+        const urlCount = (trimmed.match(/https?:\/\//gi) || []).length;
+        if (urlCount > 2) {
+            alert('Please limit URLs in your message.');
+            return;
+        }
+
         const userMessage: Message = {
             id: Date.now().toString(),
             role: 'user',
-            content: input.trim()
+            content: trimmed
         };
 
         // Optimistically update messages
@@ -51,7 +70,38 @@ export default function ChatWidget() {
                 body: JSON.stringify({ messages: newMessages }),
             });
 
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) {
+                // Handle rate limiting
+                if (response.status === 429) {
+                    const data = await response.json();
+                    const errorMessage = data.error || 'Too many requests. Please slow down.';
+                    setMessages(prev => [
+                        ...prev,
+                        {
+                            id: (Date.now() + 1).toString(),
+                            role: 'assistant',
+                            content: `⚠️ ${errorMessage}`
+                        }
+                    ]);
+                    return;
+                }
+
+                // Handle other errors
+                if (response.status === 400) {
+                    const data = await response.json();
+                    setMessages(prev => [
+                        ...prev,
+                        {
+                            id: (Date.now() + 1).toString(),
+                            role: 'assistant',
+                            content: `❌ ${data.error || 'Invalid message. Please try again.'}`
+                        }
+                    ]);
+                    return;
+                }
+
+                throw new Error('Network response was not ok');
+            }
 
             // Initialize assistant message container
             const assistantMessageId = (Date.now() + 1).toString();
@@ -82,7 +132,14 @@ export default function ChatWidget() {
             }
         } catch (error) {
             console.error('Failed to send message:', error);
-            // Optionally add error message to chat
+            setMessages(prev => [
+                ...prev,
+                {
+                    id: (Date.now() + 1).toString(),
+                    role: 'assistant',
+                    content: '❌ Sorry, something went wrong. Please try again later.'
+                }
+            ]);
         } finally {
             setIsLoading(false);
         }
