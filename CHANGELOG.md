@@ -6,9 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.1.0] - 2026-01-08
+
+### Chores
+
+- chore: bump version to 0.1.0 ([d8d5a9d](../../commit/d8d5a9d))
+
+
+## [0.1.0] - 2026-01-08
+
+### Chores
+
+- chore: bump version to 0.1.0 ([d8d5a9d](../../commit/d8d5a9d))
+
+
 ## [0.0.5] - 2026-01-08
 
 ### Features
 
+- feat: add rate limiting and validation utilities ([fa24e4c](../../commit/fa24e4c))
+- feat: implement security measures in chat widget and API ([e3206aa](../../commit/e3206aa))
 - feat: add automatic changelog generation to release process ([23e627d](../../commit/23e627d))
+
+### Bug Fixes
+
+- fix(ui): enable system-based dark mode ([f7233d7](../../commit/f7233d7))
+
+### Documentation
+
+- docs: add security documentation and automated test suite ([1b7fad3](../../commit/1b7fad3))
+- docs: update changelog for previous release ([b72616e](../../commit/b72616e))
+
+### Chores
+
+- chore: update resume ([5d34ac2](../../commit/5d34ac2))
 

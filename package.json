@@ -10,9 +10,9 @@
         "astro": "astro",
         "generate-embeddings": "node scripts/generate-embeddings.mjs",
         "changelog": "node scripts/update-changelog.mjs",
-        "release:patch": "npm version patch -m \"chore: bump version to %s\" && npm run changelog && git add CHANGELOG.md && git commit --amend --no-edit && git push origin main --tags",
-        "release:minor": "npm version minor -m \"chore: bump version to %s\" && npm run changelog && git add CHANGELOG.md && git commit --amend --no-edit && git push origin main --tags",
-        "release:major": "npm version major -m \"chore: bump version to %s\" && npm run changelog && git add CHANGELOG.md && git commit --amend --no-edit && git push origin main --tags",
+        "release:patch": "./scripts/release.sh patch",
+        "release:minor": "./scripts/release.sh minor",
+        "release:major": "./scripts/release.sh major",
         "release": "npm run release:patch"
     },
     "dependencies": {
