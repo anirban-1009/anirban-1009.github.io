@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.2.2] - 2026-01-08
+
+### Bug Fixes
+
+- fix(scripts): exclude drafts from embeddings generation ([1ca1439](../../commit/1ca1439))
+- fix(chat): enforce relative URLs to respect local/deployment base ([96f554d](../../commit/96f554d))
+
+### Documentation
+
+- docs: update changelog for v0.2.1 ([4d96b89](../../commit/4d96b89))
+
+
 ## [0.2.1] - 2026-01-08
 
 ### Bug Fixes
