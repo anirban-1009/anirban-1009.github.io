@@ -1,6 +1,7 @@
 ---
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import ChatWidget from "../components/ChatWidget";
 import Footer from "../components/footer.astro";
 import Header from "../components/header.astro";
 
@@ -54,6 +55,7 @@ const { title, imagePath, description } = Astro.props;
                 <slot />
             </div>
             <Footer />
+            <ChatWidget client:load />
         </div>
     </body>
 </html>

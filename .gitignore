@@ -15,7 +15,7 @@ pnpm-debug.log*
 
 
 # environment variables
-.env
+*.env
 .env.production
 .vercel/
 
@@ -26,3 +26,5 @@ pnpm-debug.log*
 package-lock.json
 
 .zed/
+*.env.local
+lib/
