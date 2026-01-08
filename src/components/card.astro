@@ -2,7 +2,7 @@
 import type { ImageMetadata } from "astro";
 import Image from "astro/components/Image.astro";
 
-interface Props{
+interface Props {
     title: string;
     link: string;
     description: string;
@@ -10,15 +10,22 @@ interface Props{
     tags?: string[];
 }
 
-const {title, link, description, imagePath, tags} = Astro.props;
+const { title, link, description, imagePath, tags } = Astro.props;
 
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/images/cover/*.{jpeg,jpg,png,gif,webp}');
-if (!images[imagePath]) throw new Error(`"${imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`);
-
+const images = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/images/cover/*.{jpeg,jpg,png,gif,webp}",
+);
+if (!images[imagePath])
+    throw new Error(
+        `"${imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`,
+    );
 ---
+
 <div class="lg:flex justify-center lg:px-5">
     <a href={link}>
-        <div class="bg-white dark:bg-secondary h-min-64 w-full lg:w-fit lg:min-w-[40rem] p-4 lg:p-7 rounded-xl">
+        <div
+            class="bg-white dark:bg-secondary h-min-64 w-full lg:w-fit lg:min-w-[40rem] p-4 lg:p-7 rounded-xl"
+        >
             <Image
                 alt=`${title}-Cove-Image`
                 src={images[imagePath]()}
@@ -27,21 +34,24 @@ if (!images[imagePath]) throw new Error(`"${imagePath}" does not exist in glob: 
                 quality={85}
                 widths={[240, 540, 720]}
                 sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
-                class="rounded-lg lg:w-full"/>
+                class="rounded-lg lg:w-full h-auto object-cover aspect-[17/7]"
+            />
             <div class="flex flex-col gap-4 py-8">
                 <p class="text-xl lg:text-3xl">{title}</p>
-                {tags && tags.length > 0 && (
-                    <div class="flex flex-row gap-3 -ml-4">
-                    {tags.map((tag) => (
-                        <a
-                        class="h-auto w-fit px-3 rounded-lg border border-primary text-primary line-clamp-1"
-                        href={`/tag/${tag}`}
-                        >
-                        {tag}
-                        </a>
-                    ))}
-                    </div>
-                )}
+                {
+                    tags && tags.length > 0 && (
+                        <div class="flex flex-row gap-3 -ml-4">
+                            {tags.map((tag) => (
+                                <a
+                                    class="h-auto w-fit px-3 rounded-lg border border-primary text-primary line-clamp-1"
+                                    href={`/tag/${tag}`}
+                                >
+                                    {tag}
+                                </a>
+                            ))}
+                        </div>
+                    )
+                }
                 <p class="lg:text-lg">{description}</p>
             </div>
         </div>

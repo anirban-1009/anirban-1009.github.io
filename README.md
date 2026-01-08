@@ -31,14 +31,38 @@ Any static assets, like images, can be placed in the `public/` directory.
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| Command                      | Action                                                                           |
+| :--------------------------- | :------------------------------------------------------------------------------- |
+| `npm install`                | Installs dependencies                                                            |
+| `npm run dev`                | Starts local dev server at `localhost:4321`                                      |
+| `npm run build`              | Generates embeddings and builds production site to `./dist/`                     |
+| `npm run preview`            | Preview your build locally, before deploying                                     |
+| `npm run generate-embeddings`| Generates vector embeddings from MDX content for RAG chatbot                     |
+| `npm run release`            | Bumps patch version, creates git tag, and pushes to main                         |
+| `npm run astro ...`          | Run CLI commands like `astro add`, `astro check`                                 |
+| `npm run astro -- --help`    | Get help using the Astro CLI                                                     |
+
+## 🤖 RAG Chatbot
+
+This portfolio includes an AI-powered chatbot using Retrieval-Augmented Generation (RAG) that can answer questions about the content:
+
+- **Content Source**: All `.md` and `.mdx` files in `src/content/` (blog posts, work projects, about page)
+- **Embedding Generation**: Run `npm run generate-embeddings` to create vector embeddings from your content
+- **Auto-Generation**: Embeddings are automatically generated during `npm run build`
+- **Vector Store**: Stored in `src/lib/vector-store.json` (generated, not committed)
+
+## 📦 Versioning & Releases
+
+This project follows [Semantic Versioning](https://semver.org/):
+
+- **Current Version**: Check `package.json` for the latest version
+- **Release Process**: Use `npm run release` to:
+  - Bump the patch version (e.g., 0.0.4 → 0.0.5)
+  - Create a git commit with the version change
+  - Create a git tag (e.g., `v0.0.5`)
+  - Push changes and tags to the main branch
+
+For major or minor version bumps, manually update the version in `package.json` or use `npm version major` or `npm version minor`.
 
 ## Tailwind CSS
 

@@ -8,7 +8,8 @@
         "build": "npm run generate-embeddings && astro build",
         "preview": "astro preview",
         "astro": "astro",
-        "generate-embeddings": "node scripts/generate-embeddings.mjs"
+        "generate-embeddings": "node scripts/generate-embeddings.mjs",
+        "release": "npm version patch -m \"chore: bump version to %s\" && git push origin main --tags"
     },
     "dependencies": {
         "@ai-sdk/google": "^3.0.6",

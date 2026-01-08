@@ -97,7 +97,7 @@ export default function ChatWidget() {
 
     useEffect(() => {
         if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }, [messages]);
 
@@ -121,7 +121,7 @@ export default function ChatWidget() {
                     </div>
 
                     {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-black-secondary">
+                    <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 bg-gray-50 dark:bg-black-secondary">
                         {messages.length === 0 && (
                             <div className="text-center text-gray-500 dark:text-gray-400 mt-10">
                                 <p className="mb-2 text-4xl">👋</p>

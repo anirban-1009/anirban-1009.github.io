@@ -97,6 +97,12 @@ async function generateEmbeddings() {
         }
     }
 
+    // Ensure the output directory exists
+    const outputDir = path.dirname(outputFile);
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+    }
+
     fs.writeFileSync(outputFile, JSON.stringify(vectors, null, 2));
     console.log(`Saved ${vectors.length} vectors to ${outputFile}`);
 }
