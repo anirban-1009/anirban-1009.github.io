@@ -80,7 +80,7 @@ export default function ChatWidget() {
                         {
                             id: (Date.now() + 1).toString(),
                             role: 'assistant',
-                            content: `⚠️ ${errorMessage}`
+                            content: errorMessage
                         }
                     ]);
                     return;
@@ -94,7 +94,7 @@ export default function ChatWidget() {
                         {
                             id: (Date.now() + 1).toString(),
                             role: 'assistant',
-                            content: `❌ ${data.error || 'Invalid message. Please try again.'}`
+                            content: data.error || 'Invalid message. Please try again.'
                         }
                     ]);
                     return;
@@ -137,7 +137,7 @@ export default function ChatWidget() {
                 {
                     id: (Date.now() + 1).toString(),
                     role: 'assistant',
-                    content: '❌ Sorry, something went wrong. Please try again later.'
+                    content: 'Sorry, something went wrong. Please try again later.'
                 }
             ]);
         } finally {
