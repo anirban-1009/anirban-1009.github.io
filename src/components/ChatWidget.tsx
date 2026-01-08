@@ -23,9 +23,97 @@ export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const suggestionsRef = useRef<HTMLDivElement>(null);
+
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    // Scroll selected suggestion into view
+    useEffect(() => {
+        if (showSuggestions && suggestionsRef.current) {
+            const selectedElement = suggestionsRef.current.children[selectedIndex] as HTMLElement;
+            if (selectedElement) {
+                selectedElement.scrollIntoView({ block: 'nearest' });
+            }
+        }
+    }, [selectedIndex, showSuggestions]);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!showSuggestions) return;
+
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setSelectedIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1));
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setSelectedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (suggestions.length > 0) {
+                const s = suggestions[selectedIndex];
+                const cursor = input.lastIndexOf('@');
+                const newValue = input.substring(0, cursor) + '@' + s + ' ';
+                setInput(newValue);
+                setShowSuggestions(false);
+                inputRef.current?.focus();
+            }
+        } else if (e.key === 'Escape') {
+            setShowSuggestions(false);
+        }
+    };
+
+    useEffect(() => {
+        setSelectedIndex(0);
+    }, [suggestions]);
+
+    const [availableContent, setAvailableContent] = useState<{ title: string, slug: string, type: string }[]>([]);
+
+    useEffect(() => {
+        // Fetch available content for auto-completion
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setAvailableContent(data);
+                }
+            })
+            .catch(err => console.error('Failed to fetch content suggestions:', err));
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(e.target.value);
+        const val = e.target.value;
+        setInput(val);
+
+        // Find if we are typing a mention
+        // Matches: @some-text at the end of string or after a space
+        const match = val.match(/(?:^|\s)@([\w-]*)$/);
+
+        if (match) {
+            const query = match[1].toLowerCase();
+            const staticSuggestions = ['blog', 'work', 'about'];
+
+            // Filter content based on query
+            const contentSuggestions = availableContent
+                .filter(item =>
+                    item.slug.toLowerCase().includes(query) ||
+                    item.title.toLowerCase().includes(query)
+                )
+                .map(item => item.slug);
+
+            const allSuggestions = [
+                ...staticSuggestions.filter(s => s.toLowerCase().includes(query)),
+                ...contentSuggestions
+            ].slice(0, 8); // Limit to 8 suggestions
+
+            if (allSuggestions.length > 0) {
+                setSuggestions(allSuggestions);
+                setShowSuggestions(true);
+                return;
+            }
+        }
+
+        setShowSuggestions(false);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -261,9 +349,35 @@ export default function ChatWidget() {
                                 className="w-full px-4 py-3 pr-12 bg-gray-100 dark:bg-secondary border-none rounded-xl focus:ring-2 focus:ring-blue-500/50 outline-none text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                 value={input}
                                 onChange={handleInputChange}
-                                placeholder="Type your question..."
+                                onKeyDown={handleKeyDown}
+                                placeholder="Type your question... (Try @blog, @work)"
                                 disabled={isLoading}
                             />
+                            {showSuggestions && (
+                                <div ref={suggestionsRef} className="absolute bottom-full left-0 mb-2 w-full bg-white dark:bg-black-secondary border border-gray-200 dark:border-secondary rounded-xl shadow-lg overflow-hidden max-h-60 overflow-y-auto z-50">
+                                    {suggestions.map((s, index) => (
+                                        <button
+                                            key={s}
+                                            type="button"
+                                            className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${index === selectedIndex
+                                                ? 'bg-primary text-secondary font-bold'
+                                                : 'text-secondary dark:text-white hover:bg-secondary hover:text-white'
+                                                }`}
+                                            onClick={() => {
+                                                const cursor = input.lastIndexOf('@');
+                                                const newValue = input.substring(0, cursor) + '@' + s + ' ';
+                                                setInput(newValue);
+                                                setShowSuggestions(false);
+                                                inputRef.current?.focus();
+                                            }}
+                                            onMouseEnter={() => setSelectedIndex(index)}
+                                        >
+                                            <span className="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center text-xs">@</span>
+                                            {s}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                             <button
                                 type="submit"
                                 disabled={isLoading || !input.trim()}
