@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.2.0] - 2026-01-08
+
+### Features
+
+- feat: add content api endpoint and update config ([e4add0f](../../commit/e4add0f))
+- feat(api): improve chat context injection and rate limiting ([f6813c2](../../commit/f6813c2))
+- feat(ui): add keyboard navigation and improve suggestion styles ([72effad](../../commit/72effad))
+
+### Bug Fixes
+
+- fix: relax validation to allow mentions ([1cfcb95](../../commit/1cfcb95))
+- fix(chat): lock body scroll when chat is open on mobile ([a923775](../../commit/a923775))
+
+
 ## [0.1.1] - 2026-01-08
 
 ### Chores
