@@ -38,7 +38,11 @@ All commands are run from the root of the project, from a terminal:
 | `npm run build`              | Generates embeddings and builds production site to `./dist/`                     |
 | `npm run preview`            | Preview your build locally, before deploying                                     |
 | `npm run generate-embeddings`| Generates vector embeddings from MDX content for RAG chatbot                     |
-| `npm run release`            | Bumps patch version, creates git tag, and pushes to main                         |
+| `npm run changelog`          | Generates changelog entry from git commits since last tag                        |
+| `npm run release`            | Bumps patch version, creates git tag, and pushes to main (alias for release:patch) |
+| `npm run release:patch`      | Bumps patch version (0.0.x) - for bug fixes                                      |
+| `npm run release:minor`      | Bumps minor version (0.x.0) - for new features                                   |
+| `npm run release:major`      | Bumps major version (x.0.0) - for breaking changes                               |
 | `npm run astro ...`          | Run CLI commands like `astro add`, `astro check`                                 |
 | `npm run astro -- --help`    | Get help using the Astro CLI                                                     |
 
@@ -53,16 +57,30 @@ This portfolio includes an AI-powered chatbot using Retrieval-Augmented Generati
 
 ## 📦 Versioning & Releases
 
-This project follows [Semantic Versioning](https://semver.org/):
+This project follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH):
 
-- **Current Version**: Check `package.json` for the latest version
-- **Release Process**: Use `npm run release` to:
-  - Bump the patch version (e.g., 0.0.4 → 0.0.5)
-  - Create a git commit with the version change
-  - Create a git tag (e.g., `v0.0.5`)
-  - Push changes and tags to the main branch
+- **Patch (0.0.x)**: Bug fixes and minor changes → `npm run release:patch` or `npm run release`
+- **Minor (0.x.0)**: New features (backward compatible) → `npm run release:minor`  
+- **Major (x.0.0)**: Breaking changes → `npm run release:major`
 
-For major or minor version bumps, manually update the version in `package.json` or use `npm version major` or `npm version minor`.
+Each release command automatically:
+1. Bumps the version in `package.json`
+2. Generates a changelog entry from git commits
+3. Creates a git commit with the version change and changelog
+4. Creates a git tag (e.g., `v0.0.6`)
+5. Pushes changes and tags to the main branch
+
+### 📝 Changelog
+
+The project uses [Keep a Changelog](https://keepachangelog.com/) format. Changelog entries are automatically generated from commit messages:
+
+- **feat:** → Features
+- **fix:** → Bug Fixes  
+- **docs:** → Documentation
+- **chore:** → Chores
+- Messages with "breaking" → BREAKING CHANGES
+
+**Tip**: Use [Conventional Commits](https://www.conventionalcommits.org/) format for better changelog organization!
 
 ## Tailwind CSS
 

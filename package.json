@@ -9,7 +9,11 @@
         "preview": "astro preview",
         "astro": "astro",
         "generate-embeddings": "node scripts/generate-embeddings.mjs",
-        "release": "npm version patch -m \"chore: bump version to %s\" && git push origin main --tags"
+        "changelog": "node scripts/update-changelog.mjs",
+        "release:patch": "npm version patch -m \"chore: bump version to %s\" && npm run changelog && git add CHANGELOG.md && git commit --amend --no-edit && git push origin main --tags",
+        "release:minor": "npm version minor -m \"chore: bump version to %s\" && npm run changelog && git add CHANGELOG.md && git commit --amend --no-edit && git push origin main --tags",
+        "release:major": "npm version major -m \"chore: bump version to %s\" && npm run changelog && git add CHANGELOG.md && git commit --amend --no-edit && git push origin main --tags",
+        "release": "npm run release:patch"
     },
     "dependencies": {
         "@ai-sdk/google": "^3.0.6",
