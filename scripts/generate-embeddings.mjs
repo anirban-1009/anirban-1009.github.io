@@ -37,8 +37,8 @@ async function generateEmbeddings() {
         const content = fs.readFileSync(file, 'utf8');
         const { data, content: markdownBody } = matter(content);
 
-        // Skip if draft is true
-        if (data.draft) continue;
+        // Skip if isDraft is true
+        if (data.isDraft) continue;
 
         // Get relative path for the slug/url
         // Assuming file structure: .../src/content/blog/slug.mdx or .../src/content/work/slug.mdx
