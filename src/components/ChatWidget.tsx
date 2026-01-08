@@ -317,7 +317,17 @@ export default function ChatWidget() {
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
                                             components={{
-                                                a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-blue-200 dark:hover:text-blue-300" />,
+                                                a: ({ node, ...props }) => {
+                                                    const isExternal = props.href?.startsWith('http');
+                                                    return (
+                                                        <a
+                                                            {...props}
+                                                            target={isExternal ? "_blank" : "_self"}
+                                                            rel={isExternal ? "noopener noreferrer" : undefined}
+                                                            className="underline font-medium hover:text-blue-200 dark:hover:text-blue-300"
+                                                        />
+                                                    );
+                                                },
                                             }}
                                         >
                                             {m.content}

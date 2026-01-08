@@ -154,7 +154,7 @@ export const POST = async ({ request }: { request: Request }) => {
                 const uniqueItems = new Map();
                 vectors.forEach((vec: any) => {
                     if (relevantTypes.includes(vec.metadata.type)) {
-                        uniqueItems.set(vec.metadata.url, vec.metadata.title);
+                        uniqueItems.set(vec.metadata.url.toLowerCase(), vec.metadata.title);
                     }
                 });
 
@@ -174,7 +174,7 @@ export const POST = async ({ request }: { request: Request }) => {
             .slice(0, 5);
 
         const contextText = contextChunks
-            .map((chunk: any) => `Source: ${chunk.metadata.title} (${chunk.metadata.url})\nContent: ${chunk.content}`)
+            .map((chunk: any) => `Source: ${chunk.metadata.title} (${chunk.metadata.url.toLowerCase()})\nContent: ${chunk.content}`)
             .join('\n\n---\n\n') + collectionSummary;
 
         const systemPrompt = `You are a helpful AI assistant for Anirban's personal portfolio website. 
@@ -184,6 +184,7 @@ export const POST = async ({ request }: { request: Request }) => {
     - Answer questions based ONLY on the provided context.
     - If the context contains a list of 'Available items', you may use it to suggest interesting or relevant posts even if their full content isn't in the chunks.
     - When asked for 'interesting', 'best', or 'recommended' items, you can act as Anirban and recommend items from the 'Available items' list based on their titles.
+    - When recommending a specific page or item, ALWAYS provide the link using markdown format: \`[Title](URL)\`. Use the URLs provided in the 'Available items' list or Context source headers.
     - If you don't have enough information to answer, say "I don't have enough specific details about that to answer fully," but try to be helpful with what you have.
     - Be friendly, professional, and concise.
     - You can use markdown in your response.
