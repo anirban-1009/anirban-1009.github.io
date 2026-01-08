@@ -158,6 +158,25 @@ export default function ChatWidget() {
         }
     }, [messages]);
 
+    // Lock body scroll on mobile when chat is open
+    useEffect(() => {
+        const handleScrollLock = () => {
+            if (isOpen && window.innerWidth < 768) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        };
+
+        handleScrollLock();
+        window.addEventListener('resize', handleScrollLock);
+
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('resize', handleScrollLock);
+        };
+    }, [isOpen]);
+
     return (
         <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
             {/* Chat Window */}
