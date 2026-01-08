@@ -1,5 +1,6 @@
 ---
 import Image from "astro/components/Image.astro";
+import { getImage } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import Prose from "../../components/prose.astro";
@@ -25,11 +26,19 @@ if (!images[post.data.imagePath])
   throw new Error(
     `"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`,
   );
+
+const imagePromise = images[post.data.imagePath]();
+const imageData = (await imagePromise).default;
+const optimizedImage = await getImage({ src: imageData, format: "png" });
+const ogImageUrl = new URL(
+  optimizedImage.src,
+  Astro.site || "https://anirbansikdar.com",
+).href;
 ---
 
 <Layout
   title={post.data.title}
-  imagePath=`https://anirbansikdar.com/${post.data.metaPath}`
+  imagePath={ogImageUrl}
   description={post.data.description}
 >
   <article>

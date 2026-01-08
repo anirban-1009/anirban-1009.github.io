@@ -16,7 +16,7 @@ const blogCollection = defineCollection({
         title: z.string(),
         description: z.string(),
         imagePath: z.string(),
-        metaPath: z.string(),
+        metaPath: z.string().optional(),
         date: z.string().transform((str) => new Date(str)), // Ensure this transformation is applied
     }),
 });
@@ -27,7 +27,7 @@ const workCollection = defineCollection({
         title: z.string(),
         description: z.string(),
         imagePath: z.string(),
-        metaPath: z.string(),
+        metaPath: z.string().optional(),
         tags: z.array(z.string()),
         date: z.string().transform((str) => new Date(str)), // Ensure this transformation is applied
     }),
