@@ -206,7 +206,12 @@ export const POST = async ({ request }: { request: Request }) => {
                 }))
             ],
             onFinish: ({ usage }) => {
-                console.log('[USAGE]', usage);
+                const { inputTokens, outputTokens, totalTokens, outputTokenDetails } = usage as any;
+                let logMsg = `[USAGE] Total: ${totalTokens} | Input: ${inputTokens} | Output: ${outputTokens}`;
+                if (outputTokenDetails?.reasoningTokens > 0) {
+                    logMsg += ` (Reasoning: ${outputTokenDetails.reasoningTokens})`;
+                }
+                console.log(logMsg);
             },
         });
 
