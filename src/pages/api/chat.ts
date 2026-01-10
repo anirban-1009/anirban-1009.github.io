@@ -205,6 +205,9 @@ export const POST = async ({ request }: { request: Request }) => {
                     content: m.content || m.parts?.filter((p: any) => p.type === 'text').map((p: any) => p.text).join('') || ''
                 }))
             ],
+            onFinish: ({ usage }) => {
+                console.log('[USAGE]', usage);
+            },
         });
 
         return result.toTextStreamResponse();
