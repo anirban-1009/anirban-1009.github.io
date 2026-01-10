@@ -7,6 +7,8 @@ tags: ["Astro", "React", "RAG", "Vercel AI SDK", "Gemini"]
 date: January 10, 2026
 ---
 
+import Mermaid from '../../components/Mermaid';
+
 <img src="/videos/ai-agent-demo.webp" alt="AI Agent Demo" className="w-full rounded-lg shadow-lg mb-8" />
 
 ## The Vision: A Digital Extension
@@ -25,24 +27,21 @@ The system is built on a **Hybrid RAG (Retrieval-Augmented Generation)** archite
 - **Vector Database**: Local JSON Vector Store (Optimized for edge)
 - **Embeddings**: 'text-embedding-004'
 
-```mermaid
-graph TD
-    User[User] -->|Chat Message| UI[Chat Widget (React)]
-    UI -->|Stream Request| API[Astro API Route]
-    API -->|Prompt & Context| SDK[Vercel AI SDK]
-    SDK -->|Query| Vector[Vector Store (JSON)]
+<Mermaid client:idle chart={`graph TD
+    User[User] -->|Chat Message| UI["Chat Widget (React)"]
+    UI -->|Stream Request| API["Astro API Route"]
+    API -->|Prompt & Context| SDK["Vercel AI SDK"]
+    SDK -->|Query| Vector["Vector Store (JSON)"]
     Vector -->|Relevant Chunks| SDK
-    SDK -->|Generate| Model[Google Gemini 2.5]
+    SDK -->|Generate| Model["Google Gemini 2.5"]
     Model -->|Stream Response| SDK
     SDK -->|Stream Text| UI
-    
-    style User fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000
-    style UI fill:#2563eb,stroke:#333,stroke-width:0px,color:#fff
-    style API fill:#9333ea,stroke:#333,stroke-width:0px,color:#fff
-    style SDK fill:#000,stroke:#fff,stroke-width:1px,color:#fff
-    style Vector fill:#10b981,stroke:#333,stroke-width:0px,color:#fff
-    style Model fill:#ef4444,stroke:#333,stroke-width:0px,color:#fff
-```
+    style User fill:#E9F5F8,stroke:#219EBC,stroke-width:2px,color:#023047
+    style UI fill:#219EBC,stroke:#023047,stroke-width:0px,color:#08202B
+    style API fill:#023047,stroke:#219EBC,stroke-width:1px,color:#E9F5F8
+    style SDK fill:#08202B,stroke:#219EBC,stroke-width:1px,color:#E9F5F8
+    style Vector fill:#2C3E50,stroke:#219EBC,stroke-width:0px,color:#E9F5F8
+    style Model fill:#8E44AD,stroke:#fff,stroke-width:0px,color:#E9F5F8`} />
 
 ### Key Components
 
