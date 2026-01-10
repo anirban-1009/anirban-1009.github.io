@@ -69,17 +69,22 @@ export default function ChatWidget() {
 
     const [availableContent, setAvailableContent] = useState<{ title: string, slug: string, type: string }[]>([]);
 
+    const [hasFetchedContent, setHasFetchedContent] = useState(false);
+
     useEffect(() => {
-        // Fetch available content for auto-completion
-        fetch('/api/content')
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setAvailableContent(data);
-                }
-            })
-            .catch(err => console.error('Failed to fetch content suggestions:', err));
-    }, []);
+        // Fetch available content for auto-completion only when chat is opened
+        if (isOpen && !hasFetchedContent) {
+            setHasFetchedContent(true);
+            fetch('/api/content')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        setAvailableContent(data);
+                    }
+                })
+                .catch(err => console.error('Failed to fetch content suggestions:', err));
+        }
+    }, [isOpen, hasFetchedContent]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
