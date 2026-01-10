@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import sanitize from 'sanitize-html';
 import MarkdownIt from 'markdown-it';
+import sanitize from 'sanitize-html';
 const parser = new MarkdownIt();
 
 export async function GET(context: any) {
@@ -9,11 +9,11 @@ export async function GET(context: any) {
   const work = await getCollection('work');
 
   const taggedBlogPosts = blog
-                          .filter(post => !post.data.isDraft)
-                          .map(post => ({ ...post, type: 'blog' }));
+    .filter(post => !post.data.isDraft)
+    .map(post => ({ ...post, type: 'blog' }));
   const taggedWorkPosts = work
-                          .filter(post => !post.data.isDraft)
-                          .map(post => ({ ...post, type: 'work' }));
+    .filter(post => !post.data.isDraft)
+    .map(post => ({ ...post, type: 'work' }));
 
   // Combine all posts into a single array
   let allPosts = [...taggedBlogPosts, ...taggedWorkPosts];
@@ -27,7 +27,7 @@ export async function GET(context: any) {
     items: allPosts.map((post: any) => ({
       title: post.data.title,
       pubDate: post.data.date,
-      description: post.data.descrblogiption,
+      description: post.data.description,
       // Compute RSS link from post `slug`
       // This example assumes all posts are rendered as `/blog/[slug]` routes
       link: post.type === 'blog' ? `/blogs/${post.slug}/` : `/work/${post.slug}/`, // Conditional link based on type
