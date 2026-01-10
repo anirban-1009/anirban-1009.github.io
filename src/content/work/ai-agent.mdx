@@ -1,0 +1,70 @@
+---
+title: AI Digital Twin
+description: An intelligent RAG-powered agent that acts as a digital extension of myself, answering questions about my work, skills, and background.
+imagePath: "/src/images/cover/ai-agent-cover.png"
+metaPath: "/images/covers/ai-agent-cover.png"
+tags: ["Astro", "React", "RAG", "Vercel AI SDK", "Gemini"]
+date: January 10, 2026
+---
+
+<img src="/videos/ai-agent-demo.webp" alt="AI Agent Demo" className="w-full rounded-lg shadow-lg mb-8" />
+
+## The Vision: A Digital Extension
+
+Portfolios are static. They wait for you to read them. I wanted a portfolio that *talks back*. 
+This project isn't just a chatbot; it's an **Agentic Digital Twin** designed to understand my entire body of work and answer questions as if I were sitting right there.
+
+## Architecture
+
+The system is built on a **Hybrid RAG (Retrieval-Augmented Generation)** architecture, leveraging the speed of static sites with the power of serverless AI.
+
+### The Stack
+- **Framework**: Astro (Hybrid rendering)
+- **UI**: React 19 + Tailwind CSS
+- **AI Engine**: Vercel AI SDK + Google Gemini 2.5 Flash
+- **Vector Database**: Local JSON Vector Store (Optimized for edge)
+- **Embeddings**: 'text-embedding-004'
+
+```mermaid
+graph TD
+    User[User] -->|Chat Message| UI[Chat Widget (React)]
+    UI -->|Stream Request| API[Astro API Route]
+    API -->|Prompt & Context| SDK[Vercel AI SDK]
+    SDK -->|Query| Vector[Vector Store (JSON)]
+    Vector -->|Relevant Chunks| SDK
+    SDK -->|Generate| Model[Google Gemini 2.5]
+    Model -->|Stream Response| SDK
+    SDK -->|Stream Text| UI
+    
+    style User fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000
+    style UI fill:#2563eb,stroke:#333,stroke-width:0px,color:#fff
+    style API fill:#9333ea,stroke:#333,stroke-width:0px,color:#fff
+    style SDK fill:#000,stroke:#fff,stroke-width:1px,color:#fff
+    style Vector fill:#10b981,stroke:#333,stroke-width:0px,color:#fff
+    style Model fill:#ef4444,stroke:#333,stroke-width:0px,color:#fff
+```
+
+### Key Components
+
+1.  **Vector Store**: Instead of a heavy external DB like Pinecone, I built a custom, lightweight JSON vector store that compiles at build time. This ensures 0ms network latency for retrievals.
+2.  **Streaming API**: The `api/chat.ts` endpoint uses Vercel's AI SDK to stream responses token-by-token, giving it a "real-time" feel.
+3.  **Smart Context**: The agent doesn't just keyword match. It uses cosine similarity combined with metadata filtering (e.g., detecting if you are asking about a 'blog' or 'work' item) to pull the perfect context.
+
+## Design Decisions & "Real Experience Score"
+
+Speed is a feature. A chatbot that slows down the site is a failure.
+
+### 1. Lazy Hydration Strategy
+I implemented a `client:idle` hydration strategy for the chat widget. The main content loads instantly, and the heavy React chat code only hydrates once the main thread is free. providing a **100/100 Real Experience Score**.
+
+### 2. Optimistic UI & Local State
+The chat feels instant because handles all state locally and updates the UI optimistically before the server even responds.
+
+### 3. Safety & Control
+- **Rate Limiting**: Custom token-bucket rate limiting based on IP.
+- **Input Sanitization**: rigorous regex patterns to prevent prompt injection.
+- **Cost Controls**: Token usage tracking and limits.
+
+## The Future
+
+This is just V1. The next phase involves giving the agent **Tools**—the ability to navigate the site for you, switch themes, or even send me an email directly.
