@@ -60,7 +60,15 @@ const ogImageUrl = new URL(
         sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
         class="rounded-2xl lg:w-full"
       />
-      <p class="py-4">{post.data.date}</p>
+      <p class="py-4">
+        {
+          post.data.date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        }
+      </p>
       <Prose>
         <div class="lg:w-screen lg:max-w-full">
           <Content />
