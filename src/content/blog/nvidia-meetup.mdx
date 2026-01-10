@@ -1,0 +1,85 @@
+---
+title: Nvidia Meetup
+description: In this blog, I share what I was up to during the Nvidia Meetup.
+imagePath: "/src/images/cover/nvidia-cover.jpg"
+date: January 10, 2026
+metaPath: "images/cover/nvidia-cover.jpg"
+---
+
+# What is it?
+
+The Nvidia Meetup was a dynamic gathering of developers, engineers, and AI enthusiasts focused on the future of accelerated computing. It wasn't just a showcase of hardware, but a deep exploration of the software ecosystem that bridges the gap between raw GPU power and practical application. From optimizing physics simulations to deploying large language models, the sessions were packed with insights on how to leverage the full stack for real-world impact.
+
+# Accelerated Computing & The CUDA Ecosystem
+
+One of the opening themes was the efficiency of accelerated computing—highlighting how it uses significantly less energy for the same computational output compared to traditional CPU-bound workflows. But beyond efficiency, the focus was on accessibility.
+
+![CUDA Ecosystem](/images/blogs/nvidia/meetup/20251206_101951.png)
+
+We explored how **CUDA** has evolved to help use the GPU for general programming without needing to be a parallel programming expert. The ecosystem has mapped familiar Python tools to their GPU-accelerated counterparts:
+- **Numpy** users can seamlessly switch to **CuPy**.
+- **Pandas** workflows transfer directly to **CuDF**.
+
+This "programmability" extends to domain-specific applications:
+- **Modulus** for Physics simulations.
+- **Nvidia Drive** for the Automotive industry.
+- **Isaac** for Robotics.
+- **NeMo** for custom tokenizers and LLMs.
+- **CuVS** for CUDA Vector Search.
+
+# Under the Hood: Architecture & Math
+
+We also took a technical deep dive into the architecture. A key takeaway was that **CUDA computation is asynchronous**, allowing for non-blocking operations that keep the GPU saturated.
+
+The distinction between different core types was clarified:
+- **CUDA Cores**: The workhorses for general formatting and graphics processing.
+- **Tensor Cores**: Specialized units that accelerate matrix operations, the heart of modern AI.
+- **Transformer Engine**: Not a physical entity, but a highly optimized software layer that utilizes Tensor and CUDA cores to accelerate transformer models.
+
+Supporting this is **CUDA-X**, the framework stack used for Python libraries, and a suite of math libraries like **Cublas**, **Cufft**, **Cusparse**, **Curand**, and **Cudss** that power the higher-level tools.
+
+# GenAI & NIMs
+
+The conversation naturally shifted to Generative AI, with a spotlight on **NIM (Nvidia Inference Microservices)**.
+
+![NIM Architecture](/images/blogs/nvidia/meetup/20251206_114254.png)
+
+NIM acts as a portable container that radically simplifies deployment. It connects using ports and allows developers to call kernels via APIs, similar to interacting with ChatGPT.
+- It supports all major model formats.
+- **Nvidia Dynamo** enables distributed serving.
+- **TensorRT LLM** creates highly optimized engines for inference.
+
+We also looked at **build.nvidia.com** for benchmarking scripts and discussed using **NeMo** for fine-tuning models, utilizing concepts like the "Flywheel" for continuous improvement.
+
+| | |
+|---|---|
+| ![TensorRT LLM](/images/blogs/nvidia/meetup/20251206_115838.jpg) | ![Nvidia Office](/images/blogs/nvidia/meetup/IMG_20251206_084415892~2.jpg) |
+
+# The RAPIDS Ecosystem
+
+Similar to how DuckDB is revolutionizing local analytics, **RAPIDS** is doing the same for GPU-accelerated data science. The suite includes:
+- **CuGraph** for graph analytics.
+- **CuML** for machine learning algorithms.
+- **Libcudf** for dataframe manipulation.
+- **Dask RAPIDS** for scaling to clusters.
+- **cuSpatial** for geospatial data.
+
+# Key Takeaways
+
+The session left us with several critical insights into how the Nvidia ecosystem is evolving:
+
+- **Efficiency Matches Performance**: Accelerated computing delivers higher performance while consuming significantly less energy.
+- **Broad Programmability**: CUDA has transformed GPUs into broadly programmable devices. Python-friendly stacks like **CuPy**, **cuDF**, **cuML**, **cuGraph**, and **RAPIDS** allow developers to build end-to-end workflows without needing deep low-level optimization knowledge.
+- **Supercharged Workloads**: **Tensor Cores** and the **Transformer Engine** are specifically designed to handle heavy matrix operations and LLM workloads with incredible speed.
+- **A Unified Framework**: The **CUDA-X** framework provides powerful libraries across every domain—from math (cuBLAS, cuFFT) to geospatial (cuSpatial) and beyond.
+- **The Platform for Reality**: The ecosystem spans every major industry with specialized stacks:
+    - **NVIDIA NIM** for containerized model serving.
+    - **NVIDIA NeMo** for fine-tuning and customization.
+    - **Domain Stacks** like Isaac (Robotics), DRIVE (Automotive), and Modulus (Physics).
+- **Developer Ergonomics**: The shift towards async CUDA execution and Python-first tooling makes working with this hardware smoother than ever.
+
+# Wrapping Up
+
+The meetup was a fantastic blend of high-level concepts and low-level optimizations. It was a reminder that while the hardware (like the Tensor Cores) is powerful, it's the software layers that truly empower us to build faster and smarter.
+
+I left with a list of resources to explore, including the [Agents Workshop](https://github.com/inovizz/agents-workshop) and the [Smol Training Playbook](https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook#conclusion), ready to experiment with these tools in my own projects.
