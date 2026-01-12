@@ -9,7 +9,7 @@ date: January 10, 2026
 
 import Mermaid from '../../components/Mermaid';
 
-<img src="/videos/ai-agent-demo.webp" alt="AI Agent Demo" className="w-full rounded-lg shadow-lg mb-8" />
+<video src="/videos/ai-agent-demo.mp4" className="w-full rounded-lg shadow-lg mb-8" controls playsInline autoPlay muted loop />
 
 ## The Vision: A Digital Extension
 
@@ -48,6 +48,25 @@ The system is built on a **Hybrid RAG (Retrieval-Augmented Generation)** archite
 1.  **Vector Store**: Instead of a heavy external DB like Pinecone, I built a custom, lightweight JSON vector store that compiles at build time. This ensures 0ms network latency for retrievals.
 2.  **Streaming API**: The `api/chat.ts` endpoint uses Vercel's AI SDK to stream responses token-by-token, giving it a "real-time" feel.
 3.  **Smart Context**: The agent doesn't just keyword match. It uses cosine similarity combined with metadata filtering (e.g., detecting if you are asking about a 'blog' or 'work' item) to pull the perfect context.
+
+### Technical Deep Dive
+
+1. **Zero-Latency Retrieval**
+
+   Most RAG apps hit a database like Pinecone or Qdrant for every query, adding 200-500ms of latency. I moved this **"Left" to build time**.
+   - **Build Time**: A custom script scans all `.mdx` content, generates embeddings via `text-embedding-004`, and compiles them into a optimized `vector-store.json`.
+   - **Runtime**: The API simply reads this local JSON file. No external database calls. No cold starts.
+
+2. **Deterministic Intent Routing**
+
+   LLMs are probabilistic, but sometimes you need deterministic behavior. I implemented a router that intercepts `@mentions` (like `@blog` or `@work`) before the semantic search.
+   - If you ask "show me your @work", the system bypasses semantic search for that category and forces a "Collection Summary" into the context window, guaranteeing accurate retrieval.
+
+3. **The "Anti-Robot" System Prompt**
+
+   To prevent the agent from sounding like a generic support bot, the system prompt strictly forbids "meta-commentary".
+   - **Banned**: "Based on the context...", "According to your portfolio..."
+   - **Enforced**: Direct answers. "I built this using..." instead of "Anirban built this using..." when acting as the persona.
 
 ## Design Decisions & "Real Experience Score"
 
