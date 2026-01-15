@@ -8,26 +8,64 @@ type SocialLink = {
 };
 
 const socialLinks: SocialLink[] = [
-  { name: "simple-icons:linkedin", url: "https://www.linkedin.com/in/anirban-sikdar/", title: "LinkedIn"},
+  {
+    name: "simple-icons:linkedin",
+    url: "https://www.linkedin.com/in/anirban-sikdar/",
+    title: "LinkedIn",
+  },
   // { name: "simple-icons:instagram", url: "https://instagram.com/your-profile" },
-  { name: "simple-icons:gitlab", url: "https://gitlab.com/anirban-1009/", title: "Gitlab"},
-  { name: "simple-icons:github", url: "https://github.com/anirban-1009", title: "GitHub" },
-  { name: "simple-icons:gmail", url: "mailto:anirban-1009@riseup.net", title: "Email" },
-  { name: "simple-icons:leetcode", url: "https://leetcode.com/u/anirban-1009/", title: "LeetCode" },
-  { name: "simple-icons:googlecloud", url: "https://www.cloudskillsboost.google/public_profiles/7e10df1a-d2a5-4375-8e42-d2ddb607aa63", title: "Google Cloud"},
-  { name: "simple-icons:x", url: "https://x.com/Anirbancode", title: "Twitter"},
-  { name: "simple-icons:rss", url:"/rss.xml", title: "RSS Feed"}
+  {
+    name: "simple-icons:gitlab",
+    url: "https://gitlab.com/anirban-1009/",
+    title: "Gitlab",
+  },
+  {
+    name: "simple-icons:github",
+    url: "https://github.com/anirban-1009",
+    title: "GitHub",
+  },
+  {
+    name: "simple-icons:gmail",
+    url: "mailto:anirbansikdar1009+portfolio@gmail.com",
+    title: "Email",
+  },
+  {
+    name: "simple-icons:leetcode",
+    url: "https://leetcode.com/u/anirban-1009/",
+    title: "LeetCode",
+  },
+  {
+    name: "simple-icons:googlecloud",
+    url: "https://www.cloudskillsboost.google/public_profiles/7e10df1a-d2a5-4375-8e42-d2ddb607aa63",
+    title: "Google Cloud",
+  },
+  {
+    name: "simple-icons:x",
+    url: "https://x.com/Anirbancode",
+    title: "Twitter",
+  },
+  { name: "simple-icons:rss", url: "/rss.xml", title: "RSS Feed" },
 ];
 ---
 
-<footer class="flex h-full bg-white dark:bg-secondary font-sans px-4 lg:px-10 py-8 gap-8 flex-col rounded-t-xl">
-    <p class="text-xl lg:text-3xl">Anirban.space</p>
-    <div class="flex flex-row gap-4">
-        {socialLinks.map((link: SocialLink) => (
-          <a href={link.url} target="_blank" rel="noopener noreferrer" aria-label={link.name.split(':')[1]} title={link.title}>
-            <Icon name={link.name} class="h-7 w-7" />
-          </a>
-        ))}
-    </div>
-    <p>Copyright © 2024 anirban.space</p>
+<footer
+  class="flex h-full bg-white dark:bg-secondary font-sans px-4 lg:px-10 py-8 gap-8 flex-col rounded-t-xl"
+>
+  <p class="text-xl lg:text-3xl">Anirban.space</p>
+  <div class="flex flex-row gap-4">
+    {
+      socialLinks.map((link: SocialLink) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={link.name.split(":")[1]}
+          title={link.title}
+        >
+          <Icon name={link.name} class="h-7 w-7" />
+        </a>
+      ))
+    }
+  </div>
+  <p>Copyright © 2024 anirban.space</p>
 </footer>
