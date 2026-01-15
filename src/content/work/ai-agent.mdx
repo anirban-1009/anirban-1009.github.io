@@ -27,21 +27,57 @@ The system is built on a **Hybrid RAG (Retrieval-Augmented Generation)** archite
 - **Vector Database**: Local JSON Vector Store (Optimized for edge)
 - **Embeddings**: 'text-embedding-004'
 
-<Mermaid client:idle chart={`graph TD
-    User[User] -->|Chat Message| UI["Chat Widget (React)"]
-    UI -->|Stream Request| API["Astro API Route"]
-    API -->|Prompt & Context| SDK["Vercel AI SDK"]
-    SDK -->|Query| Vector["Vector Store (JSON)"]
-    Vector -->|Relevant Chunks| SDK
-    SDK -->|Generate| Model["Google Gemini 2.5"]
-    Model -->|Stream Response| SDK
-    SDK -->|Stream Text| UI
-    style User fill:#fff,stroke:#219EBC,stroke-width:2px,color:#000
-    style UI fill:#219EBC,stroke:#fff,stroke-width:1px,color:#000
-    style API fill:#023047,stroke:#219EBC,stroke-width:1px,color:#fff
-    style SDK fill:#08202B,stroke:#219EBC,stroke-width:1px,color:#fff
-    style Vector fill:#2C3E50,stroke:#219EBC,stroke-width:0px,color:#fff
-    style Model fill:#8E44AD,stroke:#fff,stroke-width:0px,color:#fff`} />
+<Mermaid client:idle chart={`flowchart TD
+    subgraph Client ["Client (Browser)"]
+        UI[Chat Interface]
+        User[User]
+        User -->|Asks Question| UI
+    end
+
+    subgraph API ["Vercel Serverless Function"]
+        Endpoint["/api/chat"]
+        
+        subgraph Security ["Security Layer"]
+            RateLimit["Rate Limiter (IP-based)"]
+            Validator["Input Validator & Sanitizer"]
+        end
+        
+        subgraph Processing ["Core Processing"]
+            Embedder["Embedding Model\n(text-embedding-004)"]
+            Search["Vector Search\n(Cosine Similarity)"]
+            Router["Mention Router\n(@work, @blog detectors)"]
+        end
+        
+        subgraph LLM ["Generation Layer"]
+            Gemini["Google Gemini 2.5 Flash"]
+            SysPrompt["System Prompt\n(Context + Rules + Profile)"]
+        end
+    end
+
+    subgraph Data ["Knowledge Base"]
+        Vectors[("Vector Store JSON")]
+        Content["MDX Content\n(Blogs & Work)"]
+    end
+
+    %% Flow Connections
+    UI -->|POST Request| Endpoint
+    Endpoint --> RateLimit
+    RateLimit -->|Allowed| Validator
+    Validator -->|Valid| Embedder
+    
+    Embedder -->|Query Vector| Router
+    Router -->|Filtered Scope| Search
+    
+    Data -->|Loading Context| Search
+    Search -->|Top 5 Chunks| SysPrompt
+    
+    SysPrompt -->|Augmented Prompt| Gemini
+    Gemini -->|Streaming Response| UI
+
+    %% Styling
+    style Gemini fill:#E8F0FE,stroke:#1a73e8,stroke-width:2px
+    style Vectors fill:#FFF8E1,stroke:#FBC02D,stroke-width:2px
+    style UI fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px`} />
 
 ### Key Components
 
