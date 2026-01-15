@@ -47,12 +47,36 @@ const metaDescription =
 				</p>
 				<p class="lg:text-lg lg:max-w-[700px]">{HeadText}</p>
 				<!-- Button -->
-				<div class="flex w-full justify-center lg:justify-start">
+				<!-- Buttons -->
+				<div
+					class="flex flex-col lg:flex-row w-full justify-center lg:justify-start gap-4"
+				>
 					<a
-						class="flex h-12 w-64 bg-secondary dark:bg-primary rounded-xl justify-center text-white items-center"
+						class="group flex h-12 w-full lg:w-64 bg-secondary dark:bg-primary rounded-xl justify-center text-white dark:text-secondary items-center gap-2 shadow-md font-medium"
 						href="/work"
 					>
-						Notable Work
+						<span>Explore My Work</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="2"
+							stroke="currentColor"
+							class="w-5 h-5"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M13.5 4.5l7.5 7.5-7.5 7.5M19.5 12H4.5"
+							></path>
+						</svg>
+					</a>
+					<a
+						class="flex h-12 w-full lg:w-64 bg-white dark:bg-black rounded-xl justify-center items-center shadow-md font-medium text-secondary dark:text-white"
+						href="/anirban_sikdar.pdf"
+						target="_blank"
+					>
+						Resume
 					</a>
 				</div>
 			</div>
@@ -120,19 +144,24 @@ const metaDescription =
 					<!-- Button -->
 					<div class="flex w-full lg:w-auto justify-center">
 						<a
-							class="flex h-12 w-64 bg-secondary dark:bg-primary rounded-xl justify-center text-white items-center"
+							class="flex h-12 w-64 bg-secondary dark:bg-primary rounded-xl justify-center text-white dark:text-secondary items-center gap-2 shadow-md font-medium"
 							href="/about"
 						>
-							More.
-						</a>
-					</div>
-					<!-- Button -->
-					<div class="flex w-full lg:w-auto justify-center">
-						<a
-							class="flex h-12 w-64 bg-white dark:bg-black border-primary border rounded-xl justify-center items-center"
-							href="Anirban_Sikdar.pdf"
-						>
-							Resume
+							<span>More About Me</span>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								class="w-5 h-5"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M13.5 4.5l7.5 7.5-7.5 7.5M19.5 12H4.5"
+								></path>
+							</svg>
 						</a>
 					</div>
 				</div>

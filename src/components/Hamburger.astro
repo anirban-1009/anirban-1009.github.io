@@ -1,15 +1,23 @@
 ---
 import { Icon } from "astro-icon/components";
 ---
+
 <div>
     <div class="hamburger lg:hidden">
-        <Icon name="pajamas:hamburger" class="h-6 w-6"/>
+        <Icon name="pajamas:hamburger" class="h-6 w-6" />
     </div>
-    <div class="nav-links hidden overflow-hidden fixed top-0 left-0 w-dvw h-dvh bg-primary dark:bg-black text-white dark:text-primary z-10">
+    <div
+        class="nav-links hidden overflow-hidden fixed top-0 left-0 w-dvw h-dvh bg-primary dark:bg-black text-white dark:text-primary z-10"
+    >
         <div class="absolute top-4 right-4 cursor-pointer">
-            <Icon name="pajamas:close" class="close-icon h-10 w-10 mt-16 mr-16"/>
+            <Icon
+                name="pajamas:close"
+                class="close-icon h-10 w-10 mt-16 mr-16"
+            />
         </div>
-        <ul class="flex flex-col justify-center h-full items-center text-3xl gap-8">
+        <ul
+            class="flex flex-col justify-center h-full items-center text-3xl gap-8"
+        >
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/work">My Work</a></li>
@@ -19,28 +27,27 @@ import { Icon } from "astro-icon/components";
 </div>
 <script>
     function toggleMenu() {
-        const navLinks = document.querySelector('.nav-links');
+        const navLinks = document.querySelector(".nav-links");
         if (navLinks) {
-            navLinks.classList.toggle('hidden');
+            navLinks.classList.toggle("hidden");
         }
-        document.body.classList.toggle('overflow-hidden');
+        document.body.classList.toggle("overflow-hidden");
     }
 
     // Event listener for hamburger icon
-    const hamburger = document.querySelector('.hamburger') as HTMLElement;
+    const hamburger = document.querySelector(".hamburger") as HTMLElement;
     if (hamburger) {
-        hamburger.addEventListener('pointerdown', (event: PointerEvent) => {
+        hamburger.addEventListener("pointerdown", (event: PointerEvent) => {
             hamburger.setPointerCapture(event.pointerId);
             toggleMenu();
         });
     }
 
     // Event listener for close icon
-    const closeIcon = document.querySelector('.close-icon') as HTMLElement;
+    const closeIcon = document.querySelector(".close-icon") as HTMLElement;
     if (closeIcon) {
-        closeIcon.addEventListener('click', () => {
+        closeIcon.addEventListener("click", () => {
             toggleMenu();
         });
     }
 </script>
-

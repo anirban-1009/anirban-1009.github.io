@@ -36,12 +36,39 @@ const tagStyles: TagStyles = {
 ---
 
 <div class="lg:flex justify-center">
-    <a href=`work\\${link}` aria-label="working link">
+    <a
+        href={`/work/${link}`}
+        aria-label="working link"
+        class="block w-full group"
+    >
         <div
-            class="bg-white dark:bg-secondary h-auto lg:h-[28rem] rounded-2xl p-4"
+            class="bg-white dark:bg-secondary h-auto lg:h-[28rem] rounded-2xl p-4 flex flex-col justify-between"
         >
+            <!-- Text Section -->
+            <div class="flex flex-col p-2 gap-3 mb-2">
+                <p
+                    class="text-xl lg:text-2xl font-sans font-medium line-clamp-2"
+                >
+                    {title}
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    {
+                        tags.map((tag) => (
+                            <span class="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                                {tag}
+                            </span>
+                        ))
+                    }
+                </div>
+                <!-- Clamped description to prevent pushing image out -->
+                <p class="text-base lg:text-lg dark:text-gray-300 line-clamp-3">
+                    {description}
+                </p>
+            </div>
+
+            <!-- Image Section -->
             <Image
-                alt=`${title}-slide-article`
+                alt={`${title}-slide-article`}
                 src={images[imagePath]()}
                 height="135"
                 width="308"
@@ -49,29 +76,8 @@ const tagStyles: TagStyles = {
                 widths={[240, 540, 720]}
                 sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
                 loading={"eager"}
-                class="rounded-lg w-full h-auto object-cover aspect-[308/135]"
+                class="rounded-xl w-full h-auto object-cover aspect-[308/135] mt-auto"
             />
-            <!-- Text Section -->
-            <div class="flex flex-col p-2 gap-3 my-5">
-                <p class="text-xl lg:text-2xl font-sans font-medium">{title}</p>
-                <div class="md:flex flex-row gap-4 -ml-4 hidden">
-                    {
-                        tags.map((tag, index) => (
-                            <a
-                                class={`h-auto w-fit text-ellipsis px-3 rounded-lg border border-primary text-primary line-clamp-1 whitespace-nowrap${
-                                    index === tags.length - 1
-                                        ? "max-w-[100px] overflow-hidden"
-                                        : ""
-                                }`}
-                                href={`tag/${tag}`}
-                            >
-                                {tag}
-                            </a>
-                        ))
-                    }
-                </div>
-                <p class="lg:text-lg dark:text-white">{description}</p>
-            </div>
         </div>
     </a>
 </div>

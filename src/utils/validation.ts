@@ -86,9 +86,11 @@ export function validateMessageHistory(messages: any[]): ValidationResult {
             return { isValid: false, reason: 'Invalid message role' };
         }
 
-        const validation = validateMessage(msg.content);
-        if (!validation.isValid) {
-            return validation;
+        if (msg.role === 'user') {
+            const validation = validateMessage(msg.content);
+            if (!validation.isValid) {
+                return validation;
+            }
         }
     }
 
