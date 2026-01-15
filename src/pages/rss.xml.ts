@@ -78,7 +78,7 @@ export async function GET(context: any) {
 
   return rss({
     title: 'Anirban.space',
-    description: "Captivating portfolio of an undergrad tech enthusiast. Anirban Sikdar's projects range from AI-powered hospital views to robotics for agriculture. Skilled in Python, JavaScript, and cloud, his interests span computer science, aerospace, and Formula 1.",
+    description: "Portfolio of Anirban Sikdar, an Associate Engineer in AI/ML building production-ready systems. Expert in Python, cloud workflows, and data visualization, with a passion for space tech and precision engineering.",
     site: context.site,
     xmlns: {
       atom: "http://www.w3.org/2005/Atom",
