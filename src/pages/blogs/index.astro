@@ -1,35 +1,37 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '../../layout/layout.astro';
-import Card from '../../components/card.astro';
+import { getCollection } from "astro:content";
+import Card from "../../components/card.astro";
+import Layout from "../../layout/layout.astro";
 
-const posts = (await getCollection('blog', ({ data }) => {
-  return data.isDraft !== true;
-})).sort((a: any, b: any) => {
+const posts = (
+  await getCollection("blog", ({ data }) => {
+    return data.isDraft !== true;
+  })
+).sort((a: any, b: any) => {
   const dateA = new Date(a.data.date); // Manual conversion
   const dateB = new Date(b.data.date); // Manual conversion
   return dateB.getTime() - dateA.getTime();
 });
-
 ---
 
-<Layout title="Blogs"
+<Layout
+  title="Blogs"
   description="A page detailing all the Blogs"
   imagePath="https://gitlab.com/anirban-1009/anirban.codes/-/raw/main/public/images/SocialHero.jpg?ref_type=heads"
 >
-    <section class="py-4">
-      <p class="text-5xl font-sans pb-4">Blogs</p>
-      <div class="flex flex-col lg:grid lg:grid-cols-2 lg:gap-y-10 gap-4">
-        {
-          posts.map((post) => (
-            <Card
-              title={post.data.title}
-              description={post.data.description}
-              imagePath={post.data.imagePath}
-              link={`/blogs/${post.slug}/`}
-              />
-          ))
-        }
-      </div>
-    </section>
+  <section class="py-10">
+    <p class="text-4xl font-sans pb-10">Blogs</p>
+    <div class="flex flex-col lg:grid lg:grid-cols-2 lg:gap-y-10 gap-4">
+      {
+        posts.map((post) => (
+          <Card
+            title={post.data.title}
+            description={post.data.description}
+            imagePath={post.data.imagePath}
+            link={`/blogs/${post.slug}/`}
+          />
+        ))
+      }
+    </div>
+  </section>
 </Layout>
