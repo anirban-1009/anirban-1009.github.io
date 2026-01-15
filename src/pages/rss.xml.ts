@@ -1,7 +1,9 @@
 import rss from '@astrojs/rss';
+import { getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import MarkdownIt from 'markdown-it';
 import sanitize from 'sanitize-html';
+
 const parser = new MarkdownIt();
 
 export async function GET(context: any) {
@@ -20,15 +22,45 @@ export async function GET(context: any) {
 
   allPosts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-  return rss({
-    title: 'Anirban.space',
-    description: "Captivating portfolio of an undergrad tech enthusiast. Anirban Sikdar's projects range from AI-powered hospital views to robotics for agriculture. Skilled in Python, JavaScript, and cloud, his interests span computer science, aerospace, and Formula 1.",
-    site: context.site,
-    xmlns: {
-      atom: "http://www.w3.org/2005/Atom",
-    },
-    customData: `<atom:link href="${new URL("rss.xml", context.site)}" rel="self" type="application/rss+xml" />`,
-    items: allPosts.map((post: any) => ({
+  // Glob images to resolve paths
+  const images = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/images/cover/*.{jpeg,jpg,png,gif,webp}"
+  );
+
+  const items = await Promise.all(allPosts.map(async (post: any) => {
+    let enclosure = undefined;
+    let customData = "";
+
+    if (post.data.imagePath && images[post.data.imagePath]) {
+      const imageLoader = images[post.data.imagePath];
+      if (imageLoader) {
+        const image = (await imageLoader()).default;
+        const optimizedImage = await getImage({
+          src: image,
+          format: "png",
+          width: 1200,
+          height: 630,
+        });
+
+        const url = new URL(optimizedImage.src, context.site).href;
+
+        // Use original format if passthrough service is used, or the requested format if optimized
+        // Since we requested 'png', but passthrough ignores it, we should check src extension or fallback to original image.format
+        // Using image.format is safe for source info.
+        const format = image.format === 'jpg' ? 'jpeg' : image.format;
+        const mimeType = `image/${format}`;
+
+        enclosure = {
+          url,
+          length: 0,
+          type: mimeType
+        };
+
+        customData = `<media:content type="${mimeType}" width="${optimizedImage.attributes.width ?? image.width}" height="${optimizedImage.attributes.height ?? image.height}" medium="image" url="${url}" />`;
+      }
+    }
+
+    return {
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description,
@@ -38,7 +70,21 @@ export async function GET(context: any) {
       content: sanitize(parser.render(post.body), {
         allowedTags: sanitize.defaults.allowedTags.concat(['img'])
       }),
+      enclosure,
+      customData,
       ...post.data,
-    })),
+    };
+  }));
+
+  return rss({
+    title: 'Anirban.space',
+    description: "Captivating portfolio of an undergrad tech enthusiast. Anirban Sikdar's projects range from AI-powered hospital views to robotics for agriculture. Skilled in Python, JavaScript, and cloud, his interests span computer science, aerospace, and Formula 1.",
+    site: context.site,
+    xmlns: {
+      atom: "http://www.w3.org/2005/Atom",
+      media: "http://search.yahoo.com/mrss/",
+    },
+    customData: `<atom:link href="${new URL("rss.xml", context.site)}" rel="self" type="application/rss+xml" />`,
+    items: items,
   });
 }
