@@ -24,6 +24,10 @@ export async function GET(context: any) {
     title: 'Anirban.space',
     description: "Captivating portfolio of an undergrad tech enthusiast. Anirban Sikdar's projects range from AI-powered hospital views to robotics for agriculture. Skilled in Python, JavaScript, and cloud, his interests span computer science, aerospace, and Formula 1.",
     site: context.site,
+    xmlns: {
+      atom: "http://www.w3.org/2005/Atom",
+    },
+    customData: `<atom:link href="${new URL("rss.xml", context.site)}" rel="self" type="application/rss+xml" />`,
     items: allPosts.map((post: any) => ({
       title: post.data.title,
       pubDate: post.data.date,
