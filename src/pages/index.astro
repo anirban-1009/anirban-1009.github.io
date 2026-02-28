@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import Slide from "../components/slide.astro";
 import Layout from "../layout/layout.astro";
+export const prerender = true;
 const posts = (
 	await getCollection("work", ({ data }: any) => {
 		return data.isDraft !== true;
