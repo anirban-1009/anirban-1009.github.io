@@ -102,7 +102,7 @@ export const POST = async ({ request }: { request: Request }) => {
         const sanitized = sanitizeMessage(lastUserMessageContent);
 
         const { embedding } = await embed({
-            model: google.textEmbeddingModel('text-embedding-004'),
+            model: google.embeddingModel('gemini-embedding-001'),
             value: sanitized,
         });
 

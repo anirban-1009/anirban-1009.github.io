@@ -1,0 +1,65 @@
+---
+title: "Job Hunt Mind Mapper"
+date: "2026-02-28"
+imagePath: "/src/images/cover/JobHunt.png"
+metaPath: "/src/images/cover/JobHunt.png"
+description: "Ditch the endless spreadsheets. Learn how Job Hunt Mind Mapper leverages Python, AI, and Obsidian to turn your job search into a visual knowledge graph."
+tags: ["Job Search", "Python", "Obsidian", "AI", "Productivity"]
+---
+
+# Job Hunt Mind Mapper
+
+If you've ever been on the job market, you know the drill. You start with an initial burst of energy, applying to a few promising roles. Soon enough, you're drowning in a sea of open browser tabs, endless and messy spreadsheets tracking application statuses, and a cluttered folder of slightly varied resumes. It's overwhelming, inefficient, and honestly, a bit soul-crushing.
+
+What if your job search didn't have to be a sprawling spreadsheet? What if it could be a dynamic, visual knowledge graph?
+
+Enter **Job Hunt Mind Mapper**.
+
+## What is Job Hunt Mind Mapper?
+
+Job Hunt Mind Mapper is a Python-based tool designed to completely overhaul how you manage your job search. By safely extracting data from LinkedIn and utilizing the power of local Markdown via Obsidian, it surfaces relevant opportunities, analyzes them with AI, and builds an interactive mind map of your professional network and potential employers.
+
+Instead of generic rows and columns, you get a visual, interactive landscape of your career opportunities.
+
+![Job Hunt Mind Mapper](/images/work/mindmap/Map.png)
+
+## Key Features
+
+### Automated Job Discovery
+Stop manually scrolling through endless job boards. The CLI-based tool automates the search process, finding roles that actually match your unique skills and past experience.
+
+### AI-Powered Scoring
+Not all jobs are created equal. Using NLP and LLMs, Job Hunt Mind Mapper deeply analyzes job descriptions against your resume, scoring and ranking them so you know exactly where to focus your energy first. 
+
+### Visualizing Connections
+We all know the saying, "It's not what you know, it's who you know." When the tool finds a job, it also surfaces your professional connections at that target company. Seeing a familiar face right next to a job listing gives you an immediate warm-intro strategy.
+
+### Daily Email Digests
+Get the top job matches delivered straight to your inbox. Wake up, read your digest, and know exactly what your priorities are for the day without getting lost in the noise.
+
+### Manage Workflow in Obsidian
+This is where the magic happens. All this data is synced directly to local Markdown files in an Obsidian vault. You can use Obsidian's Kanban plugins or Canvas features to visually drag and drop applications from "To Apply" to "Interviewing" to "Offer." Your job hunt becomes a living, breathing knowledge base.
+
+### Targeted Resume Tailoring
+Found the perfect job? Use the built-in CLI command (`uv run mindmap tailor`) to automatically generate a tailored resume PDF specifically optimized for that exact role's requirements.
+
+![Scrape](/images/work/mindmap/Scrape.png)
+
+## Under the Hood
+
+The tool is built with modern, robust technologies:
+- **Core:** Python 3.13+
+- **Environment Management:** `uv`
+- **Visualization:** Obsidian (Markdown + Canvas)
+- **Data Gathering:** LinkedIn Data Extraction
+- **Intelligence:** NLP/LLMs for resume and job description matching
+
+It's designed to be run locally via a powerful Command Line Interface (CLI). From logging in (`uv run mindmap login`) to sweeping the web for jobs (`uv run mindmap scrape`) to syncing your vault (`uv run mindmap sync`), your entire workflow is orchestrated through simple terminal commands.
+
+## Ready to Ditch the Spreadsheet?
+
+The job hunt doesn't have to be a disorganized, stressful mess. By treating your job search data as a connected graph, you can spot warm opportunities you would have otherwise missed and manage your workflow with significantly less friction.
+
+Ready to level up your career search? Boot up your terminal, pull down the repo, and run through the Quick Start guide to transform your job hunt today!
+
+*Happy hunting!*
