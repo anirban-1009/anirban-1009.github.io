@@ -2,7 +2,7 @@ import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import icon from "astro-icon";
-import { defineConfig, passthroughImageService } from "astro/config";
+import { defineConfig } from "astro/config";
 
 import vercel from "@astrojs/vercel";
 
@@ -14,8 +14,6 @@ export default defineConfig({
     output: "server",
     adapter: vercel({
         webAnalytics: { enabled: true },
+        imageService: false,
     }),
-    image: {
-        service: passthroughImageService(),
-    },
 });
