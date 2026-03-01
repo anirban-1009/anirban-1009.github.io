@@ -77,7 +77,7 @@ async function generateEmbeddings() {
 
         try {
             const { embeddings } = await embedMany({
-                model: google.embeddingModel('gemini-embedding-001'),
+                model: google.textEmbeddingModel('text-embedding-004'),
                 values: batch.map(d => d.content),
             });
 
