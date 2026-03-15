@@ -1,0 +1,48 @@
+---
+title: "Beyond the Code: PyConf Hyderabad 2026"
+description: "My experience and technical deep dive at PyConf Hyderabad 2026, including securing 5th place in the ASBL Jailbreak Competition."
+imagePath: "/src/images/cover/pyconf-hyd-2026-cover.jpg"
+date: March 15, 2026
+isDraft: false
+---
+# Beyond the Code: Resilience, Agents, and Jailbreaking at PyConf Hyderabad 2026
+
+I recently attended **PyConf Hyderabad 2026**, and it was far more than just a tech conference. Between the vibrant energy of the **Hyderabad Rang Rang** festivities and the deep technical sessions, it was a humbling experience that forced me to rethink how we "listen" to technology.
+
+Interacting with the "Organizational Intelligence" from teams like **Tiger Analytics**, **Straive**, and **ASBL** made me realize that while the industry is moving fast, there is still a massive gap in how the industry understands itself. We are building at breakneck speed, but we are only just beginning to listen to what these technologies are telling us about system limits and safety.
+
+## Achievement Unlocked: 5th Place in ASBL Jailbreak Competition
+One of the most surprising and rewarding highlights was participating in the **AI Jailbreak Competition hosted by ASBL**. I’m thrilled to share that I secured **5th place**! 
+
+This wasn't just about "hacking" a prompt; it was a profound lesson in model vulnerabilities. It reinforced my belief that curiosity is our best defense. To build better AI, you have to understand how it can be broken. This 5th-place finish has helped me streamline exactly where I want to focus my search regarding AI security and adversarial robustness.
+
+![image-1](/images/blogs/pyconf-hyd-2026/image-1.jpg)
+---
+
+## Technical Deep Dive: My Session Notes
+
+
+I've expanded my notes from the sessions into three major pillars that are currently defining the "curious" edge of the industry:
+
+![image-2](/images/blogs/pyconf-hyd-2026/image-2.jpg)
+
+### 1. Making AI Agents Consistent & Observable
+Building agents is easy; making them reliable is the hard part. The session on the **Microsoft Agent Framework** was a game-changer for me.
+* **The Consistency Problem:** We discussed why agents often "hallucinate" their way out of a workflow. The solution? **Linear Workflows** tracked via **Open-Telemetry**.
+* **Checkpointing:** We explored saving states at intermediate points. This is essential because if an agent fails at step 9 of 10, you shouldn't have to restart from step 1.
+* **Verification Layers:** Moving beyond simple prompts to adding layers of authentication before an agent can "act" on the real world.
+
+### 2. The Architecture of Self-Healing Systems (Resilience)
+The talks by engineers from **Straive** and **ASBL** on system health were incredibly grounded. They treated recovery as a **State Machine**, not a lucky guess.
+* **Hysteresis & Signal Processing:** We learned not to react to the first sign of trouble. By using **Hysteresis**, we wait for a stable pattern of failure before triggering a recovery, which prevents the dreaded **Thundering Herd problem** (where recovery efforts actually crash the system).
+* **The Circuit Breaker Pattern:** Implementing `pybreaker` logic—Sense, Decide, Act, Verify, Stop. 
+* **Idempotency:** A key takeaway—your recovery logic *must* be idempotent. It should leave the system in the same state regardless of whether the fix was applied once or ten times.
+* **Staggered Fixes:** Using **Tenacity** to add jitter and staggering to our fixes, ensuring the system "stretches" back to health rather than snapping.
+
+### 3. The Strategic Use of SLMs (Small Language Models)
+The industry is moving away from "Maximum Size" to "Maximum Efficiency." We analyzed benchmarks like **MMLU** and **GPQA** to determine when a small model outperforms a giant.
+* **The SLM Toolkit:** We looked at purpose-built models like **Nuextract 2.0** (for data extraction), **Paddle OCR**, and **Qwen 3.5**.
+* **The Distillation Strategy:** Why you should consider quantizing a large model or distilling its "knowledge" into a smaller, faster student model.
+* **The "Don't Use" List:** A crucial reality check—don't use SLMs for multi-hop reasoning, context windows over 32k, or complex code generation. 
+
+![image-3](/images/blogs/pyconf-hyd-2026/image-3.jpg)
