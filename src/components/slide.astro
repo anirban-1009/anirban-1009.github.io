@@ -10,24 +10,10 @@ interface Props{
     tags: string[];
 }
 
-type TagStyle = {
-    tagColor: string;
-    tagBg: string;
-};
-
-// Define the type for the tagStyles object
-type TagStyles = {
-    [key: string]: TagStyle; // This allows any string key
-};
-
 const {title, link, description, imagePath, tags} = Astro.props;
 
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/images/cover/*.{jpeg,jpg,png,gif,webp}');
 if (!images[imagePath]) throw new Error(`"${imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`);
-
-const tagStyles: TagStyles = {
-    "typescript": { "tagBg": "bg-typescript", "tagColor": "dark:text-typescript"},
-}
 
 ---
 <div class="lg:flex justify-center">
