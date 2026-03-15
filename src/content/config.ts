@@ -17,7 +17,7 @@ const blogCollection = defineCollection({
         description: z.string(),
         imagePath: z.string(),
         metaPath: z.string().optional(),
-        isDraft: z.boolean().optional().default(false),
+        isDraft: z.boolean().optional(),
         date: z.string().transform((str) => new Date(str)), // Ensure this transformation is applied
     }),
 });
