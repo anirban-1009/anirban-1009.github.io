@@ -29,8 +29,8 @@ const workCollection = defineCollection({
         description: z.string(),
         imagePath: z.string(),
         metaPath: z.string().optional(),
-        isDraft: z.boolean().optional(),
         tags: z.array(z.string()),
+        isDraft: z.boolean().optional().default(false),
         date: z.string().transform((str) => new Date(str)), // Ensure this transformation is applied
     }),
 });
