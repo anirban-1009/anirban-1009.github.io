@@ -1,0 +1,182 @@
+---
+title: VibeSync
+description: A real-time collaborative music listening platform that uses AI and WebSockets to synchronize the "vibe" of any room.
+imagePath: "/src/images/cover/vibesync.png"
+metaPath: "/src/images/cover/vibesync.png"
+tags: ["Astro", "React", "FastAPI", "Socket.IO", "Spotify API", "Gemini"]
+date: March 20, 2026
+---
+
+import Mermaid from '../../components/Mermaid';
+
+## The Problem: Solo Listening in a Social World
+
+Music is inherently social, but most streaming experiences are isolated. Whether you're in a shared apartment, a remote workspace, or a virtual party, keeping everyone on the same beat usually involves manual coordination: "Okay, 3, 2, 1, hit play!"
+
+**VibeSync** solves this by creating a real-time, high-fidelity synchronization layer over Spotify, turning solo listening into a collective experience.
+
+## Core Features
+
+- **Real-time Synchronization**: Playback status, current track, and timestamp are synchronized across all connected clients via WebSockets.
+- **Collaborative Queue**: Anyone in the room can search for songs and add them to the priority queue.
+- **History & Re-queue**: A record of every track played, allowing users to quickly revisit past favorites.
+- **Social Presence**: Avatars show who's currently in the "vibe," and each action (adding a song) is tagged to its author.
+- **AI Recommendation Engine**: A RAG-powered recommendation system using **Google Gemini** to suggest the next track based on the room's current mood and listening history.
+
+## Architecture
+
+VibeSync is architected as a **Real-time Synchronization Engine** built on top of the Spotify ecosystem. It follows a modular client-server model with a dedicated AI services layer for the "AI DJ" experience.
+
+### System Overview
+- **Frontend**: A React-based SPA that manages user interaction and high-fidelity music playback via the **Spotify Web Playback SDK**.
+- **Backend**: A high-performance **FastAPI** server that manages room states, concurrent user presence, and shared queues using optimized in-memory storage.
+- **AI Layer**: An extensible service layer for **LangChain** and **TTS** (Text-to-Speech) to generate real-time "AI DJ" intros and mood-based recommendations.
+- **Socket.IO**: The backbone for bidirectional, low-latency communication (events like `play`, `pause`, `skip`, and `set_vibe`).
+
+### Architecture Diagram
+
+<Mermaid client:idle chart={`graph TD
+    %% Styling
+    classDef frontend fill:#282c34,stroke:#61dafb,stroke-width:2px,color:white;
+    classDef backend fill:#1f4037,stroke:#3fb950,stroke-width:2px,color:white;
+    classDef external fill:#121212,stroke:#1db954,stroke-width:2px,color:white;
+
+    subgraph Client_Side ["Frontend (React + Vite)"]
+        direction TB
+        App["App.jsx <br/>Central State Manager"]:::frontend
+
+        subgraph UI_Components ["UI Components"]
+            Login:::frontend
+            JoinRoom:::frontend
+            Player:::frontend
+            Search:::frontend
+            Queue:::frontend
+        end
+
+        SpotifySDK[Spotify Web Playback SDK]:::external
+
+        App --> Login
+        App --> JoinRoom
+        App --> Player
+        App --> Search
+        App --> Queue
+        App -.->|Init & Control| SpotifySDK
+    end
+
+    subgraph Server_Side ["Backend (FastAPI + Python-SocketIO)"]
+        direction TB
+        Main["main.py <br/>Entry Point"]:::backend
+        Auth["auth.py <br/>OAuth Routes"]:::backend
+        Events["events.py <br/>Socket Event Handlers"]:::backend
+        State["state.py <br/>Global State Store"]:::backend
+
+        subgraph AI_Layer ["AI Services"]
+            Logic["logic/vibe.py <br/>Math & Aggregation"]:::backend
+            LLM["services/llm.py <br/>LangChain/Ollama"]:::backend
+            TTS["services/voice.py <br/>Text-to-Speech"]:::backend
+        end
+
+        Main --> Auth
+        Main --> Events
+        Events -->|Read/Write| State
+        Events -->|Trigger| Logic
+        Logic -->|Request| LLM
+        LLM -->|Generate| TTS
+    end
+
+    subgraph External_Services ["External Services"]
+        SpotifyAPI[Spotify Web API]:::external
+        SpotifyAccounts[Spotify Accounts Service]:::external
+        LLM_Provider[Ollama / Gemini]:::external
+        TTS_Provider[ElevenLabs / EdgeTTS]:::external
+    end
+
+    %% Data Flow Connections
+    App <==>|Real-time Events| Events
+    App -->|Auth Request| Auth
+
+    Auth -.->|Redirect| SpotifyAccounts
+    SpotifyAccounts -.->|Callback Code| Auth
+
+    App -->|Search API| SpotifyAPI
+    SpotifySDK <==>|Audio Stream| SpotifyAPI
+    Events -.->|Get Recs| SpotifyAPI
+
+    LLM -.->|Inference| LLM_Provider
+    TTS -.->|Synthesis| TTS_Provider`} />
+
+## Data Flow & AI DJ Logic
+
+The "Vibe" of the room isn't just a list of songs; it's a dynamic state managed by the backend:
+
+1.  **Vibe Detection**: When a user sets a "vibe" (e.g., *"I want something high-energy for coding"*), `events.py` triggers the LLM layer to parse the intent into Spotify-compatible seed genres and acoustic parameters.
+2.  **Auto-Queue (The AI DJ)**: If the collaborative queue runs empty, the `logic/vibe.py` module automatically fetches recommendations based on the `active_vibe`. 
+3.  **Contextual Intros**: Before the new track plays, the **AI DJ** generates a custom intro (text-to-speech) explaining *why* it chose that song for the room's current mood.
+4.  **Instant Sync**: Once the track is ready, the `room_state` is broadcast via Socket.IO, triggering all connected Spotify SDKs to start playback at identical timestamps.
+
+## Technical Deep Dive
+
+### 1. The Synchronization Challenge
+
+Achieving `<50ms` sync latency across multiple global clients is non-trivial. VibeSync uses **Socket.IO** to maintain persistent TCP connections. When a "Host" changes tracks or pauses, the event is broadcast to all "Guests" with a precise timestamp. The guests then adjust their local Spotify SDK context to match the master playback state.
+
+### 2. **RAG-Powered Recommendations**: 
+Rather than simple "similar artist" matches, VibeSync uses **Gemini 2.5 Flash** to analyze the room's "current vibe." This follows a three-step process:
+- **Retrieval**: The system searches a vector store containing millions of track embeddings to find songs that match the *emotional* profile of the current queue.
+- **Augmentation**: The LLM considers contextual metadata like time of day, current room density, and the specific taste profile of users currently in the room.
+- **Generation**: A curated "Next Track" is injected into the queue with a unique UI label: *Suggested by AI*.
+
+### 3. **The AI DJ Persona**: 
+The "Vibe" isn't a silent state. The AI DJ has a distinct, customizable persona that intros new tracks, comments on mood shifts, and provides "behind-the-scenes" snippets about the current tracks—all delivered via real-time Text-to-Speech (TTS).
+
+### 4. Edge-Optimized Backend
+
+By decoupling the WebSocket logic from the main application state, the FastAPI backend can handle thousands of concurrent rooms with minimal memory footprint. The use of **Pydantic** for data validation ensures that the shared room state is always consistent, preventing "race conditions" where two users might try to skip the same song.
+
+## AI-Assisted Development: A New Way to Build
+
+VibeSync was built using an advanced **AI-assisted workflow**. Building complex, real-time systems with AI can be challenging, but I utilized a structured approach to stay on target:
+
+### Phased Planning & Step-by-Step Verification
+Rather than asking for a monolithic implementation, I developed a **phased implementation plan**. Each step was developed, tested, and verified independently. This granular approach prevented the "hallucination creep" often seen in large AI-assisted projects.
+
+<Mermaid client:idle chart={`graph LR
+    subgraph SDLC ["AI-Assisted SDLC Flow"]
+        Plan["Phased Plan<br/>(Master Goal)"]
+        Issue["Github Issue<br/>(Phase X)"]
+        SubIssue["Sub-Issues<br/>(Specific Tasks)"]
+        Verif["Step-by-Step<br/>Verification"]
+        Ground["Unit Test<br/>(Ground Truth)"]
+        CI["GitHub Actions<br/>(CI/CD Pass)"]
+        Success["Verified<br/>Milestone"]
+    end
+
+    Plan --> Issue
+    Issue --> SubIssue
+    SubIssue -->|Development| Verif
+    Verif -->|Evaluation| Ground
+    Ground -->|Pass| CI
+    CI -->|Merge| Success
+    Success -->|Iterate| Plan`} />
+
+### Architectural "Guard Rails"
+Considerable time was spent upfront setting up the **Architectural Ground Truth**. By explicitly defining how modules were to be established and arranged, I created a set of "guard rails" for the AI. This ensured that all module interactions followed industry-level best practices and prevented the architecture from drifting during the development process.
+
+### CI/CD & GitHub Rulesets
+To enforce the highest quality standards, I implemented **GitHub Rulesets** on the repository. This ensured that:
+- Every change had to originate from a linked **GitHub Issue** or **Sub-Issue**.
+- No code could be merged into the main branch unless it passed the full suite of **GitHub Actions** (Linting, Testing, and Security Checks).
+- This setup acted as an automated "gatekeeper," ensuring that even with AI-assisted code generation, the final integration was always human-verified and technically sound.
+
+### Unit Tests as "Ground Truth"
+A critical component was my commitment to **80+% unit test coverage** before moving between phases. 
+- **The Local Ground Truth**: These tests served as the definitive "ground truth" for the AI agents. 
+- **Verifiable Development**: By providing the agent with a robust testing suite, it could autonomously evaluate if its generated code was actually correct and met the project's requirements. This closed the feedback loop and ensured that as the project scaled, the core logic remained stable.
+
+## The Future: Smart Environment Sync
+
+VibeSync is just the beginning. The roadmap includes integration with **Philips Hue** and **LIFX** APIs to sync your smart lighting with the music's BPM and mood—creating a truly immersive, multi-sensory environment.
+
+---
+
+*Check out the source code on [GitHub](https://github.com/anirban-1009/VibeSync).*

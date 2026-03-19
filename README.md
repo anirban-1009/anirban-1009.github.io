@@ -44,6 +44,7 @@ All commands are run from the root of the project, from a terminal:
 | `npm run release:minor`      | Bumps minor version (0.x.0) - for new features                                   |
 | `npm run release:major`      | Bumps major version (x.0.0) - for breaking changes                               |
 | `npm run astro ...`          | Run CLI commands like `astro add`, `astro check`                                 |
+| `npm run new-post ...`      | Create a new blog or work post from a template                                   |
 | `npm run astro -- --help`    | Get help using the Astro CLI                                                     |
 
 ## 🤖 RAG Chatbot
