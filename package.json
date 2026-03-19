@@ -50,6 +50,7 @@
         "@iconify-json/simple-icons": "^1.1.114",
         "@tailwindcss/typography": "^0.5.14",
         "@types/markdown-it": "^14.1.2",
+        "@types/node": "^25.5.0",
         "@types/sanitize-html": "^2.13.0"
     }
 }
