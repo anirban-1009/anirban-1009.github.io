@@ -24,7 +24,7 @@
         "@astrojs/react": "^4.4.2",
         "@astrojs/rss": "^4.0.7",
         "@astrojs/tailwind": "^5.1.1",
-        "@astrojs/vercel": "^9.0.3",
+        "@astrojs/vercel": "^8.0.4",
         "@vercel/analytics": "^1.5.0",
         "@vercel/speed-insights": "^1.0.12",
         "ai": "^6.0.21",
