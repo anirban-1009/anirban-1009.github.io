@@ -24,7 +24,7 @@ if (!images[imagePath])
 <div class="lg:flex justify-center lg:px-5">
     <a href={link}>
         <div
-            class="bg-white dark:bg-secondary h-min-64 w-full lg:w-fit lg:min-w-[40rem] p-4 lg:p-7 rounded-xl"
+            class="bg-tint dark:bg-secondary h-min-64 w-full lg:w-fit lg:min-w-[40rem] p-4 lg:p-7 rounded-xl border border-primary/20 dark:border-primary/10"
         >
             <Image
                 alt=`${title}-Cove-Image`
@@ -43,7 +43,7 @@ if (!images[imagePath])
                         <div class="flex flex-row gap-3 -ml-4">
                             {tags.map((tag) => (
                                 <a
-                                    class="h-auto w-fit px-3 rounded-lg border border-primary text-primary line-clamp-1"
+                                    class="h-auto w-fit px-3 rounded-lg border border-primary/30 bg-white text-secondary dark:border-primary/10 dark:bg-black dark:text-primary line-clamp-1"
                                     href={`/tag/${tag}`}
                                 >
                                     {tag}
