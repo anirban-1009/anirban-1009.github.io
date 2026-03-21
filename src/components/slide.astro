@@ -28,7 +28,7 @@ if (!images[imagePath])
         class="block w-full group"
     >
         <div
-            class="bg-white dark:bg-secondary h-auto lg:h-[28rem] rounded-2xl p-4 flex flex-col justify-between"
+            class="bg-tint dark:bg-secondary h-auto lg:h-[28rem] rounded-2xl p-4 flex flex-col justify-between border border-primary/20 dark:border-primary/5"
         >
             <!-- Text Section -->
             <div class="flex flex-col p-2 gap-3 mb-2">
@@ -40,7 +40,7 @@ if (!images[imagePath])
                 <div class="flex flex-wrap gap-2">
                     {
                         tags.map((tag) => (
-                            <span class="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400">
+                            <span class="text-xs px-2 py-1 rounded-md border border-primary/30 bg-white text-secondary dark:border-primary/10 dark:bg-black dark:text-primary">
                                 {tag}
                             </span>
                         ))

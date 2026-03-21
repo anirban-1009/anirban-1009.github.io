@@ -7,14 +7,15 @@ export default {
 		'./components/**/*.{html,js}'
 	],
 	theme: {
-		colors: {
-			'primary': '#219EBC',
-			'secondary': '#023047',
-			'black': '#0E1111',
-			'white': '#E9F5F8',
-			'black-secondary': '#08202B',
-		},
 		extend: {
+			colors: {
+				'primary': '#219EBC',
+				'secondary': '#023047',
+				'black': '#0E1111',
+				'white': '#FFFFFF',
+				'tint': '#E9F5F8',
+				'black-secondary': '#08202B',
+			},
 			fontFamily: {
 				space: "'Space Grotesk', sans-serif",
 				sans: "'DM Sans', sans-serif",
