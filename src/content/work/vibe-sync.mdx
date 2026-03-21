@@ -13,7 +13,10 @@ import Mermaid from '../../components/Mermaid';
 
 Music is inherently social, but most streaming experiences are isolated. Whether you're in a shared apartment, a remote workspace, or a virtual party, keeping everyone on the same beat usually involves manual coordination: "Okay, 3, 2, 1, hit play!"
 
-**VibeSync** solves this by creating a real-time, high-fidelity synchronization layer over Spotify, turning solo listening into a collective experience.
+**VibeSync** solves this by creating a real-time, high-fidelity synchronization layer over Spotify, turning solo listening into a collective experience. 
+
+Interestingly, the seeds for VibeSync were planted not during my time with modern real-time stacks, but years ago while I was first diving into **Django REST Framework (DRF)**. I originally envisioned this as a monolithic project to test my API skills; seeing it finally come to fruition as a distributed, sub-50ms latency system is the culmination of that long-term vision.
+
 
 [**Experience VibeSync Live**](https://vibe-sync-five.vercel.app/)
 
@@ -32,7 +35,7 @@ VibeSync is architected as a **Real-time Synchronization Engine** built on top o
 ### System Overview
 - **Frontend**: A React-based SPA that manages user interaction and high-fidelity music playback via the **Spotify Web Playback SDK**.
 - **Backend**: A high-performance **FastAPI** server that manages room states, concurrent user presence, and shared queues using optimized in-memory storage.
-- **AI Layer**: An extensible service layer for **LangChain** and **TTS** (Text-to-Speech) to generate real-time "AI DJ" intros and mood-based recommendations.
+- **AI Layer**: A dedicated service layer utilizing **Google Gemini 2.5 Flash** and native Python logic to generate charismatic "AI DJ" intros and mood-based recommendations.
 - **Socket.IO**: The backbone for bidirectional, low-latency communication (events like `play`, `pause`, `skip`, and `set_vibe`).
 
 ### Architecture Diagram
@@ -74,7 +77,7 @@ VibeSync is architected as a **Real-time Synchronization Engine** built on top o
 
         subgraph AI_Layer ["AI Services"]
             Logic["logic/vibe.py <br/>Math & Aggregation"]:::backend
-            LLM["services/llm.py <br/>LangChain/Ollama"]:::backend
+            LLM["services/llm.py <br/>Google Gemini"]:::backend
             TTS["services/voice.py <br/>Text-to-Speech"]:::backend
         end
 
@@ -89,7 +92,7 @@ VibeSync is architected as a **Real-time Synchronization Engine** built on top o
     subgraph External_Services ["External Services"]
         SpotifyAPI[Spotify Web API]:::external
         SpotifyAccounts[Spotify Accounts Service]:::external
-        LLM_Provider[Ollama / Gemini]:::external
+        LLM_Provider[Google Gemini]:::external
         TTS_Provider[ElevenLabs / EdgeTTS]:::external
     end
 
