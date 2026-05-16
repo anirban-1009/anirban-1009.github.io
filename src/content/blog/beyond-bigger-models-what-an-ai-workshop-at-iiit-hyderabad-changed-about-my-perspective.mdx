@@ -1,0 +1,214 @@
+---
+title: "Beyond Bigger Models: What an AI Workshop at IIIT Hyderabad Changed About My Perspective"
+description: "Reflections on modern AI systems, infrastructure, and evolving model architectures from an insightful workshop at IIIT Hyderabad."
+imagePath: "/src/images/cover/beyond-bigger-models-what-an-ai-workshop-at-iiit-hyderabad-changed-about-my-perspective.jpeg"
+metaPath: "/src/images/cover/beyond-bigger-models-what-an-ai-workshop-at-iiit-hyderabad-changed-about-my-perspective.jpeg"
+tags: ["AI", "IIIT Hyderabad", "LLMs"]
+date: May 16, 2026
+isDraft: false
+---
+
+Recently, I attended an AI systems workshop at IIIT Hyderabad, and it ended up reshaping how I think about the current direction of the industry.
+
+Going into the workshop, I had a fairly strong belief that the future of practical AI would lean heavily toward edge computing and local inference. Projects like llama.cpp particularly fascinated me because they represented something powerful: efficient, portable intelligence that could run close to the user without relying entirely on large cloud infrastructure.
+
+I still believe that direction is extremely important.
+
+However, one of the biggest takeaways from this event was realizing how rapidly the industry is maturing around remote compute infrastructure and self-managed AI systems.
+
+The conversations were no longer centered purely around “using AI APIs.” Instead, there was a noticeable emphasis on:
+- Hosting custom models
+- Building inference runtimes
+- Managing GPU resources
+- Optimizing memory movement
+- Designing scalable serving infrastructure
+- Improving system-level efficiency
+
+That distinction felt important to me.
+
+There is a meaningful difference between integrating AI as a feature and engineering AI as a core capability.
+
+This workshop made it clear that many organizations are beginning to move toward the latter.
+
+---
+
+# The Shift from Dense Models to Mixture of Experts
+![Nemotron Super](/images/blogs/beyond-bigger-models-what-an-ai-workshop-at-iiit-hyderabad-changed-about-my-perspective/nemotron-super.jpg)
+
+One of the strongest themes throughout the workshop was how model architectures themselves are evolving.
+
+The industry continues to push toward larger parameter counts, with trillion-parameter models becoming increasingly common. But there is an important nuance behind those numbers: most modern trillion-parameter systems are not dense models.
+
+Instead, they rely heavily on Mixture of Experts (MoE) architectures.
+
+Unlike traditional dense transformers where every parameter participates in every forward pass, MoE systems activate only subsets of experts for specific tokens. This significantly changes the economics of scale:
+- Lower effective compute requirements
+- Better specialization
+- More efficient routing of computation
+- Reduced operational overhead compared to equivalently sized dense systems
+
+A particularly interesting concept discussed during the sessions was Latent MoE.
+
+Rather than routing computation directly into large experts, the system first projects operations into compressed latent spaces, reducing memory and computational costs without significantly affecting model quality.
+
+Reference:
+- Latent MoE Research → https://research.nvidia.com/labs/nemotron/LatentMoE/
+
+What stood out to me here was that the future of scaling may not simply be about adding more parameters. It may increasingly be about how intelligently systems utilize and route those parameters.
+
+---
+
+# Smaller Models Are Improving Faster Than Expected
+![Making of nemotron](/images/blogs/beyond-bigger-models-what-an-ai-workshop-at-iiit-hyderabad-changed-about-my-perspective/making-of-nemotron.jpg)
+Another insight that stayed with me was how capable smaller models are becoming.
+
+While frontier models continue to dominate headlines, improvements in architecture, quantization, memory optimization, and post-training techniques are allowing smaller models to perform surprisingly well for many practical workloads.
+
+Discussions around:
+- Domain-adaptive pretraining
+- Quantization pipelines
+- Efficient inference runtimes
+- Specialized fine-tuning
+- Memory-aware serving systems
+
+all reinforced the same idea:
+
+Well-engineered smaller systems can often provide better operational value than larger but inefficient deployments.
+
+Some especially interesting projects and resources mentioned:
+- PersonaPlex → https://huggingface.co/nvidia/personaplex-7b-v1
+- NVIDIA NeMo → https://github.com/NVIDIA-NeMo/NeMo
+- Nemotron MIND Dataset → https://huggingface.co/datasets/nvidia/Nemotron-MIND
+- Nemotron Personas India → https://huggingface.co/datasets/nvidia/Nemotron-Personas-India
+- NVIDIA Nemotron Parse → https://huggingface.co/nvidia/NVIDIA-Nemotron-Parse-v1.1
+
+This felt especially relevant in a world where compute efficiency is becoming just as important as raw capability.
+
+---
+
+# The Real Bottleneck Is Infrastructure
+![LLM inference 101](/images/blogs/beyond-bigger-models-what-an-ai-workshop-at-iiit-hyderabad-changed-about-my-perspective/llm-inference-101.jpg)
+One of the most valuable realizations from the workshop was understanding how much modern AI performance now depends on infrastructure engineering.
+
+The discussion repeatedly shifted away from just “how smart is the model?” toward:
+“How efficiently can the surrounding system support the model?”
+
+Topics like:
+- KV cache offloading
+- GPU Direct Storage (GDS)
+- Cache-aware routing
+- Runtime orchestration
+- SGLang
+- FlashInfer
+- Distributed memory systems
+
+were treated not as optional optimizations, but as fundamental architectural requirements.
+
+Useful references discussed during sessions:
+- Dynamo → https://github.com/ai-dynamo/dynamo
+- Dynamo Documentation → https://docs.nvidia.com/dynamo/latest/getting-started/quickstart
+- SGLang → https://github.com/sgl-project/sglang
+- FlashInfer → https://github.com/flashinfer-ai/flashinfer
+- Utilyze → https://github.com/systalyze/utilyze
+
+One particularly interesting concept from the infrastructure discussions was “speed of light” utilization:
+A metric comparing how much a hardware resource could theoretically perform versus how efficiently it is actually being utilized.
+
+Modern AI systems are increasingly bottlenecked not purely by compute, but by how efficiently they can move tokens, cache states, and model weights across memory hierarchies.
+
+That was a major shift in thinking for me.
+
+The engineering challenge is no longer just reasoning quality.
+It is reasoning quality under real infrastructure constraints.
+
+---
+
+# Context Windows and Memory Systems
+
+![Context Windows and Memory Systems](/images/blogs/beyond-bigger-models-what-an-ai-workshop-at-iiit-hyderabad-changed-about-my-perspective/nemotron-voice-agent.jpg)
+
+Another fascinating area was how dramatically context windows have expanded over the past year.
+
+What once felt experimental is quickly becoming standard:
+- 128k+
+- 256k+
+- Million-token context windows
+
+And importantly, these capabilities are increasingly available even in open-weight and smaller models.
+
+The infrastructure enabling this expansion was just as interesting as the models themselves:
+- Tiered KV memory systems
+- Cache-aware decoding
+- KV cache offloading
+- Memory-aware inference runtimes
+
+There was also discussion around how systems like Nemotron Speech ASR use cache-aware mechanisms to recognize already-processed users and improve efficiency during repeated interactions.
+
+Voice workflow reference:
+- NVIDIA Nemotron Voice Agent → https://build.nvidia.com/nvidia/nemotron-voice-agent
+
+---
+
+# Hardware and Training Insights
+
+Another particularly valuable area of discussion involved the relationship between model architecture and hardware optimization.
+
+Some notable topics included:
+- Rubin GPUs and TPU systolic architectures
+- Mega kernel execution strategies
+- MFU-heavy pretraining workloads
+- Parallelism-heavy post-training pipelines
+- GPU Direct Storage (GDS)
+- FP8 vs NVFP4 precision discussions
+
+One interesting comparison discussed:
+- B200 (NVFP4) outperforming H100 (FP8) under certain optimized workflows
+
+The broader takeaway was that modern AI progress is deeply tied to co-design between:
+- Models
+- Runtimes
+- Memory systems
+- Hardware architectures
+
+---
+
+# Returning to IIIT Hyderabad
+
+On a more personal note, another memorable aspect of the workshop was simply being back at IIIT Hyderabad after quite some time.
+
+What I have always admired about IIIT is not just its technical environment, but the culture surrounding curiosity itself.
+
+There is a very distinct energy in places where people genuinely enjoy discussing ideas, experimenting with systems, and questioning assumptions.
+
+That ethos becomes visible very quickly:
+- The openness toward exploration
+- The seriousness around technical discussion
+- The excitement around learning for its own sake
+
+It reminded me that strong institutions do more than teach engineering concepts.
+They shape how people approach curiosity and problem-solving itself.
+
+Walking through the campus again after so long felt genuinely refreshing, and it was a reminder of why environments like these matter so much in technology.
+
+---
+
+# Final Thoughts
+
+The AI landscape is evolving extremely quickly, but one thing this workshop reinforced for me is that the future will likely belong to teams that understand systems holistically.
+
+Not just models.
+Not just infrastructure.
+But the interaction between architecture, memory, latency, compute, routing, observability, and deployment constraints.
+
+The conversation around AI is becoming less about isolated models and more about complete systems engineering.
+
+And honestly, I think that is one of the most exciting transitions happening in the field right now.
+
+A huge thank you to everyone who contributed to the workshop:
+- The teams from NVIDIA
+- HydraPi
+- The organizing communities
+- The speakers, researchers, engineers, and volunteers
+- The institutions continuing to create spaces for deep technical curiosity and open learning
+
+Experiences like these are a reminder that the most exciting part of AI is still the people building, questioning, and learning together.
