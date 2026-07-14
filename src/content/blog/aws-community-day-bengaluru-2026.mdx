@@ -28,7 +28,7 @@ One slide that framed the whole weekend was the evolution of LLM apps — from *
 
 ## Day 1: Plenary — enterprise agent antipatterns
 
-The early plenary thread mapped AWS’s path from S3 buckets to Bedrock, SageMaker, AgentCore, Strands, and S3 Vectors — useful context for how the platform is trying to meet the agentic decade. The part that actually landed for me was the **enterprise multi-agent antipatterns**:
+Mani Chandrasekaran’s keynote mapped AWS’s path from S3 buckets toward Bedrock, SageMaker, AgentCore, Strands, and S3 Vectors — useful context for the agentic decade. The part that actually landed for me came right after, in **Building Multi-Agent Systems for the Enterprise** (Smitesh Sathidevi): the **enterprise multi-agent antipatterns**.
 
 - One mega-agent with every tool
 - Every API is a tool
@@ -42,7 +42,7 @@ Hearing this said out loud mattered. It’s easy to ship a demo that looks intel
 
 ## The session that stuck: Memory Poisoning in AI Agents
 
-This was the talk of the day for me. **Memory Poisoning Attack in AI Agents** didn’t treat security as an appendix — it treated memory as an attack surface, the same way we should treat RAG stores and agent state.
+This was the talk of the day for me. **Memory Poisoning Attack in AI Agents** (Sankalp Sandeep Paranjpe) didn’t treat security as an appendix — it treated memory as an attack surface, the same way we should treat RAG stores and agent state.
 
 ![Memory Persistence Model](/images/blogs/aws-community-day-blr-2026/memory-persistence-model.jpg)
 
@@ -64,19 +64,21 @@ A few ideas from the talk I’m still carrying:
 
 This is the impression that wouldn’t leave: demos celebrate “agents with memory.” Production has to ask who can write memory, for how long, with what proof, and how we forget when trust breaks. That’s impact almost no Memory API resource page puts next to the getting-started snippet — and it’s why this session felt less like a talk and more like a warning label I’d been missing.
 
-## Tiny models, Lambda, and choosing the small path
+## Tiny Models on Lambda — and knowing when not to ship an agent
 
 Not every production lesson was about adversaries. Some of it was about refusing to overbuild.
 
-![TinyLlama on Lambda vs Amazon Bedrock](/images/blogs/aws-community-day-blr-2026/tinyllama-vs-bedrock.jpg)
+![Tiny Models on AWS Lambda](/images/blogs/aws-community-day-blr-2026/tinyllama-vs-bedrock.jpg)
 
-The TinyLLM / Bedrock decision framing was one of the most reusable slides of the day. Ask three questions: is the task **narrow**, is volume **high** enough that cost compounds, and is the workload **privacy-bound** enough that data must stay in your account? If all yes, own a tiny model on Lambda — cheaper, with cold and snap-start tradeoffs included. If any answer is no, use managed Bedrock. Same instinct as the antipatterns talk: don’t inflate the stack because the demo looked impressive.
+**Tiny Models, Massive Impact: Running Distilled LLMs on AWS Lambda with Zero Cold Start** (Samyuktha M S) was the clearest “small model” talk of the day. The point wasn’t that every workload should leave Bedrock — it was that distilled / tiny models on Lambda can land with real cost wins when cold start and snap start are handled properly. Lower cost only matters if the model is actually small enough and the runtime path is honest about latency; that talk was about making that path work, not about romanticising local demos.
+
+Right after it on the AI/ML track, **Don’t build Agents for Everything** (Dhaval Nagar) pushed the same instinct from the product side: treat AI use cases with a procurement mindset. Not every problem deserves an agent, and shipping one because the workshop felt cool is how demo enthusiasm turns into production debt.
 
 ![Lambda Managed Instances session](/images/blogs/aws-community-day-blr-2026/lambda-managed-instances.jpg)
 
-The Lambda / Managed Instances thread made the runtime side concrete. Classic Lambda is pay-as-you-go with tight CPU and overhead limits — great until agent loops get long and warm paths matter. **Lambda Managed Instances** is where the function model meets EC2 capacity: capacity providers define instance type, fleet size, and the rest of the knobs. Cold starts and stateful agent work are exactly where “it worked in the demo” stops being an architecture.
+Separately, on **The Builder’s Mic**, Pritesh Kiri’s **Lambda Managed Instances: When Serverless Meets EC2 Power** made the runtime tradeoffs concrete. Classic Lambda is pay-as-you-go with limited CPU overhead — great until agent loops get long and warm paths matter. Managed Instances is where the function model meets EC2 capacity: capacity providers define instance type, fleet size, and the rest of the knobs. Cold starts and stateful agent work are exactly where “it worked in the demo” stops being an architecture.
 
-Between tiny models and managed instances, the theme was the same as the security talks: production is about choosing the smallest capable path *and* knowing when that path ends.
+Across those three beats — tiny models that actually fit Lambda, knowing when *not* to build an agent, and Managed Instances when functions need more muscle — the theme matched the security talks: production is about choosing the smallest capable path *and* knowing when that path ends.
 
 ## What I’m taking back
 
@@ -85,7 +87,7 @@ I don’t need another long list of GitHub labs to feel the shift. A few things 
 - **Demo AI and production AI are different sports.** Shared resources rarely advertise that cost, even when the underlying tools are excellent.
 - Agent security is as much **memory + IAM + TTL + provenance** as it is prompts and guardrail slides.
 - Enterprise antipatterns — mega-agents, tools everywhere, eval never — explain why so many “working” demos die in the first real tenancy.
-- Prefer the small capable path. TinyLLM on Lambda when the three questions say yes; Bedrock when they don’t.
+- Distilled models on Lambda can be a real option when cold/snap start and cost are designed for — and plenty of problems don’t need an agent at all.
 - And yes: the **Memory Poisoning** session was amazing. It’s the one I’ll keep recommending to anyone building agents that actually remember.
 
 Until the next #ACDBLR — keep shipping, but ship like memory can be poisoned, and like production is where the real conversation starts.
