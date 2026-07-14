@@ -53,12 +53,13 @@ const ogImageUrl = new URL(
     <div class="lg:px-52">
       <Image
         src={images[post.data.imagePath]()}
-        height="166"
-        width="370"
+        height="658"
+        width="1600"
         alt={post.data.description}
-        widths={[240, 540, 720]}
-        sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
-        class="rounded-2xl lg:w-full"
+        quality={90}
+        widths={[640, 960, 1280, 1600]}
+        sizes={`(max-width: 640px) 100vw, (max-width: 1280px) 960px, 1600px`}
+        class="rounded-2xl w-full h-auto object-cover aspect-[17/7]"
       />
       <p class="py-4">
         {

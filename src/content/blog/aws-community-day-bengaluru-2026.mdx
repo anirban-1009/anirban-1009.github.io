@@ -1,0 +1,91 @@
+---
+title: "AWS Community Day Bengaluru 2026"
+description: "Notes from AWS Community Day Bengaluru 2026 — why demo AI collapses in production, and why the Memory Poisoning talk was the session that stuck."
+imagePath: "/src/images/cover/aws-community-day-blr-2026-cover.jpg"
+date: July 14, 2026
+isDraft: false
+---
+
+# Namskara Bengaluru: AWS Community Day 2026
+
+I spent two days at **AWS Community Day Bengaluru 2026** (#ACDBLR26) — Friday workshops at the Amazon Development Centre, then Saturday’s full conference at NIMHANS Convention Centre. Between hallway conversations and session notes, I walked away with a sharper version of something I’ve been feeling in my own agent work:
+
+**Going from local / demo AI to production is a very big jump.** Most tutorials, repos, and “resources” never really share the *impact* of that jump. They share APIs, sample agents, and happy-path diagrams. What they rarely say out loud is how differently the system behaves once you add real credentials, shared memory, multiple tenants, and someone whose job is to break trust.
+
+The talks here kept poking at exactly those gaps: trust boundaries, memory that can be poisoned, evaluation that never arrives until prod, and tools that explode into antipatterns the moment a real enterprise uses them.
+
+![Namskara Bengaluru](/images/blogs/aws-community-day-blr-2026/namskara-bengaluru.jpg)
+
+## Day 0: Elastic workshop — agents meet real data
+
+Friday’s Elastic + Jina workshop was the right kind of hands-on. We wired embeddings, tools, and skills into an Elastic agent, used Kibana Dev Tools to hit endpoints, searched chunked knowledge in natural language, and used A2A to inspect and chat with what we’d built. Multilingual Jina models, geo metadata on CSV knowledge, the difference between semantic search and classic retrieval — all practical builder muscle.
+
+What mattered more than the lab guide was the feeling underneath it. Connecting search, inference, and agent tools in one place looks almost easy in a workshop. On a laptop, that feels like progress. In production, that same stack becomes credentials, pipelines, cardinality, and blast radius. Saturday’s talks felt like the natural next sentence to Friday’s lab: *now what happens when this is live?*
+
+![LLM application evolution workshop](/images/blogs/aws-community-day-blr-2026/workshop-llm-evolution.jpg)
+
+One slide that framed the whole weekend was the evolution of LLM apps — from **stateless prompts** to prompt templates and context, then tool-calling, workflow engines, and multi-agent systems with shared memory. It shows how fast we climbed the stack. The industry narrative often stops at “we have agents now.” Community Day kept asking a more useful question: *what breaks when those agents remember, call tools, and get credentials?*
+
+## Day 1: Plenary — enterprise agent antipatterns
+
+The early plenary thread mapped AWS’s path from S3 buckets to Bedrock, SageMaker, AgentCore, Strands, and S3 Vectors — useful context for how the platform is trying to meet the agentic decade. The part that actually landed for me was the **enterprise multi-agent antipatterns**:
+
+- One mega-agent with every tool
+- Every API is a tool
+- Every database table is exposed
+- No evaluation until production, even though behaviour is probabilistic and workflow-dependent
+- Agent handoff without evidence — every response should carry evidence
+
+That’s the demo→prod gap in one list. Local demos reward “give the model everything and see what happens.” Production rewards the opposite: least privilege, eval before ship, evidence on handoff. Orchestrator–worker setups can help with unpredictable tasks, but only if you don’t turn every table and endpoint into an unsupervised tool surface.
+
+Hearing this said out loud mattered. It’s easy to ship a demo that looks intelligent and still have no answer for tenancy, audit, or “why did the agent do that?” once someone else starts using it.
+
+## The session that stuck: Memory Poisoning in AI Agents
+
+This was the talk of the day for me. **Memory Poisoning Attack in AI Agents** didn’t treat security as an appendix — it treated memory as an attack surface, the same way we should treat RAG stores and agent state.
+
+![Memory Persistence Model](/images/blogs/aws-community-day-blr-2026/memory-persistence-model.jpg)
+
+Memory isn’t one bucket. Persistence has tiers and blast radius — session attributes that die with a conversation, cross-session memory that follows a user, knowledge-base vectors that can live indefinitely across agents. Poisoning goes after that stack: if an attacker can write what the agent “remembers,” they don’t need to jailbreak the model on every turn. They rewrite the agent’s past, and the next session happily trusts it.
+
+A few ideas from the talk I’m still carrying:
+
+**IAM trust chain.** Always put an intermediary between the agent and data. The agent shouldn’t *hold* access to raw stores; it should only express *what* should be accessed, with something else enforcing it. That sounds bureaucratic until you imagine a compromised agent with direct write access to OpenSearch.
+
+**How attackers actually get in.** On searchable memory layers, the story wasn’t exotic zero-days first — leaked credentials, insider threats, compromised pipelines. Ordinary trust failures that only become catastrophic once memory is writable and durable.
+
+**Defences that feel production-shaped:**
+
+- **IAM role split** — explicitly deny the actions you suspect, instead of hoping broad roles stay accidental
+- **Validator Lambda** — validate actions before they stick to long-lived memory
+- **Provenance** — know where a memory came from before you treat it as truth
+- **TTL as a security boundary** — score confidence, understand threat, and *decay* memory that may be compromised instead of keeping it forever because retrieval still works
+- **Close observability gaps** — find and classify unusual traffic when memory starts behaving oddly
+
+This is the impression that wouldn’t leave: demos celebrate “agents with memory.” Production has to ask who can write memory, for how long, with what proof, and how we forget when trust breaks. That’s impact almost no Memory API resource page puts next to the getting-started snippet — and it’s why this session felt less like a talk and more like a warning label I’d been missing.
+
+## Tiny models, Lambda, and choosing the small path
+
+Not every production lesson was about adversaries. Some of it was about refusing to overbuild.
+
+![TinyLlama on Lambda vs Amazon Bedrock](/images/blogs/aws-community-day-blr-2026/tinyllama-vs-bedrock.jpg)
+
+The TinyLLM / Bedrock decision framing was one of the most reusable slides of the day. Ask three questions: is the task **narrow**, is volume **high** enough that cost compounds, and is the workload **privacy-bound** enough that data must stay in your account? If all yes, own a tiny model on Lambda — cheaper, with cold and snap-start tradeoffs included. If any answer is no, use managed Bedrock. Same instinct as the antipatterns talk: don’t inflate the stack because the demo looked impressive.
+
+![Lambda Managed Instances session](/images/blogs/aws-community-day-blr-2026/lambda-managed-instances.jpg)
+
+The Lambda / Managed Instances thread made the runtime side concrete. Classic Lambda is pay-as-you-go with tight CPU and overhead limits — great until agent loops get long and warm paths matter. **Lambda Managed Instances** is where the function model meets EC2 capacity: capacity providers define instance type, fleet size, and the rest of the knobs. Cold starts and stateful agent work are exactly where “it worked in the demo” stops being an architecture.
+
+Between tiny models and managed instances, the theme was the same as the security talks: production is about choosing the smallest capable path *and* knowing when that path ends.
+
+## What I’m taking back
+
+I don’t need another long list of GitHub labs to feel the shift. A few things left a real mark:
+
+- **Demo AI and production AI are different sports.** Shared resources rarely advertise that cost, even when the underlying tools are excellent.
+- Agent security is as much **memory + IAM + TTL + provenance** as it is prompts and guardrail slides.
+- Enterprise antipatterns — mega-agents, tools everywhere, eval never — explain why so many “working” demos die in the first real tenancy.
+- Prefer the small capable path. TinyLLM on Lambda when the three questions say yes; Bedrock when they don’t.
+- And yes: the **Memory Poisoning** session was amazing. It’s the one I’ll keep recommending to anyone building agents that actually remember.
+
+Until the next #ACDBLR — keep shipping, but ship like memory can be poisoned, and like production is where the real conversation starts.
