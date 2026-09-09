@@ -1,6 +1,5 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { streamText } from "ai";
-import { embedText } from "../../lib/embeddings";
+import { embed, streamText } from "ai";
 import fs from "fs";
 import path from "path";
 import { chatRateLimiter, ipRateLimiter } from "../../utils/rate-limiter";
@@ -140,7 +139,22 @@ export const POST = async ({ request }: { request: Request }) => {
 
     const sanitized = sanitizeMessage(lastUserMessageContent);
 
-    const userVector = await embedText(sanitized);
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Chat is not configured. Set GOOGLE_GENERATIVE_AI_API_KEY (or GEMINI_API_KEY) to enable it.",
+        }),
+        { status: 503 },
+      );
+    }
+
+    const { embedding } = await embed({
+      model: getGoogleClient().embeddingModel("gemini-embedding-001"),
+      value: sanitized,
+    });
+
+    const userVector = embedding;
 
     const vectorStorePath = path.resolve("src/lib/vector-store.json");
 

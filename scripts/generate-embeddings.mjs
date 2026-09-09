@@ -1,3 +1,5 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { embedMany } from "ai";
 import dotenv from "dotenv";
 import fs from "fs";
 import { glob } from "glob";
@@ -6,25 +8,22 @@ import path from "path";
 
 dotenv.config();
 
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
-const OLLAMA_EMBEDDING_MODEL =
-  process.env.OLLAMA_EMBEDDING_MODEL || "nomic-embed-text";
+const apiKey =
+  process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+  process.env.GEMINI_API_KEY ||
+  process.env.GOOGLE_API_KEY;
 
-async function embedWithOllama(texts) {
-  const res = await fetch(`${OLLAMA_BASE_URL}/api/embed`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: OLLAMA_EMBEDDING_MODEL, input: texts }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Ollama embed failed (${res.status}): ${err}`);
-  }
-
-  const data = await res.json();
-  return data.embeddings;
+if (!apiKey) {
+  console.error("Google API Key not found.");
+  console.error(
+    "Please add GOOGLE_GENERATIVE_AI_API_KEY (or GEMINI_API_KEY) to your .env file.",
+  );
+  process.exit(1);
 }
+
+const google = createGoogleGenerativeAI({
+  apiKey,
+});
 
 const contentDir = path.join(process.cwd(), "src/content");
 const outputFile = path.join(process.cwd(), "src/lib/vector-store.json");
@@ -53,7 +52,7 @@ async function generateEmbeddings() {
     const collection = parts[0]; // 'blog' or 'work' or 'about'
     const slug = path.basename(relativePath, path.extname(relativePath));
 
-    const url = `/${collection}/${slug}`;
+    const url = `/${collection}/${slug}`.toLowerCase();
 
     // Simple chunking overlap method
     const chunks = splitIntoChunks(markdownBody, 800); // ~800 chars per chunk
@@ -76,28 +75,50 @@ async function generateEmbeddings() {
 
   const vectors = [];
 
-  const BATCH_SIZE = 50;
+  const BATCH_SIZE = 40;
 
   for (let i = 0; i < documents.length; i += BATCH_SIZE) {
     const batch = documents.slice(i, i + BATCH_SIZE);
+    let success = false;
+    let attempts = 0;
 
-    try {
-      const embeddings = await embedWithOllama(batch.map((d) => d.content));
-
-      for (let j = 0; j < batch.length; j++) {
-        vectors.push({
-          id: `${batch[j].metadata.url}-${i + j}`,
-          values: embeddings[j],
-          content: batch[j].content,
-          metadata: batch[j].metadata,
+    while (!success && attempts < 5) {
+      try {
+        attempts++;
+        const { embeddings } = await embedMany({
+          model: google.embeddingModel("gemini-embedding-001"),
+          values: batch.map((d) => d.content),
         });
-      }
 
-      console.log(
-        `Processed batch ${i / BATCH_SIZE + 1}/${Math.ceil(documents.length / BATCH_SIZE)}`,
-      );
-    } catch (error) {
-      console.error(`Error processing batch starting at index ${i}:`, error);
+        for (let j = 0; j < batch.length; j++) {
+          vectors.push({
+            id: `${batch[j].metadata.url}-${i + j}`,
+            values: embeddings[j],
+            content: batch[j].content,
+            metadata: batch[j].metadata,
+          });
+        }
+
+        success = true;
+        console.log(
+          `Processed batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(documents.length / BATCH_SIZE)}`,
+        );
+
+        if (i + BATCH_SIZE < documents.length) {
+          console.log("Pausing 15s to respect Gemini API rate limits...");
+          await new Promise((resolve) => setTimeout(resolve, 15000));
+        }
+      } catch (error) {
+        console.error(
+          `Attempt ${attempts} failed for batch starting at index ${i}:`,
+          error.message || error,
+        );
+        if (attempts >= 5) {
+          throw error;
+        }
+        console.log("Waiting 20s before retrying batch...");
+        await new Promise((resolve) => setTimeout(resolve, 20000));
+      }
     }
   }
 
