@@ -31,21 +31,21 @@ Any static assets, like images, can be placed in the `public/` directory.
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                      | Action                                                                           |
-| :--------------------------- | :------------------------------------------------------------------------------- |
-| `npm install`                | Installs dependencies                                                            |
-| `npm run dev`                | Starts local dev server at `localhost:4321`                                      |
-| `npm run build`              | Generates embeddings and builds production site to `./dist/`                     |
-| `npm run preview`            | Preview your build locally, before deploying                                     |
-| `npm run generate-embeddings`| Generates vector embeddings from MDX content for RAG chatbot                     |
-| `npm run changelog`          | Generates changelog entry from git commits since last tag                        |
-| `npm run release`            | Bumps patch version, creates git tag, and pushes to main (alias for release:patch) |
-| `npm run release:patch`      | Bumps patch version (0.0.x) - for bug fixes                                      |
-| `npm run release:minor`      | Bumps minor version (0.x.0) - for new features                                   |
-| `npm run release:major`      | Bumps major version (x.0.0) - for breaking changes                               |
-| `npm run astro ...`          | Run CLI commands like `astro add`, `astro check`                                 |
-| `npm run new-post ...`      | Create a new blog or work post from a template                                   |
-| `npm run astro -- --help`    | Get help using the Astro CLI                                                     |
+| Command                       | Action                                                                             |
+| :---------------------------- | :--------------------------------------------------------------------------------- |
+| `npm install`                 | Installs dependencies                                                              |
+| `npm run dev`                 | Starts local dev server at `localhost:4321`                                        |
+| `npm run build`               | Generates embeddings and builds production site to `./dist/`                       |
+| `npm run preview`             | Preview your build locally, before deploying                                       |
+| `npm run generate-embeddings` | Generates vector embeddings from MDX content for RAG chatbot                       |
+| `npm run changelog`           | Generates changelog entry from git commits since last tag                          |
+| `npm run release`             | Bumps patch version, creates git tag, and pushes to main (alias for release:patch) |
+| `npm run release:patch`       | Bumps patch version (0.0.x) - for bug fixes                                        |
+| `npm run release:minor`       | Bumps minor version (0.x.0) - for new features                                     |
+| `npm run release:major`       | Bumps major version (x.0.0) - for breaking changes                                 |
+| `npm run astro ...`           | Run CLI commands like `astro add`, `astro check`                                   |
+| `npm run new-post ...`        | Create a new blog or work post from a template                                     |
+| `npm run astro -- --help`     | Get help using the Astro CLI                                                       |
 
 ## 🤖 RAG Chatbot
 
@@ -56,15 +56,43 @@ This portfolio includes an AI-powered chatbot using Retrieval-Augmented Generati
 - **Auto-Generation**: Embeddings are automatically generated during `npm run build`
 - **Vector Store**: Stored in `src/lib/vector-store.json` (generated, not committed)
 
+### 🦙 Local Embeddings (Ollama)
+
+Embeddings are generated locally using [Ollama](https://ollama.com/) — **no API key required**. This means `npm run generate-embeddings` and `npm run build` work even without a Gemini key, as long as Ollama is running with an embedding model pulled:
+
+```bash
+ollama pull nomic-embed-text
+```
+
+Optional environment variables (add to `.env`):
+
+| Variable                 | Default                  | Description                                                           |
+| :----------------------- | :----------------------- | :-------------------------------------------------------------------- |
+| `OLLAMA_BASE_URL`        | `http://localhost:11434` | Ollama server URL                                                     |
+| `OLLAMA_EMBEDDING_MODEL` | `nomic-embed-text`       | Embedding model to use (e.g. `nomic-embed-text`, `mxbai-embed-large`) |
+
+### ⚙️ Chat generation (Gemini)
+
+The chatbot's **answer generation** still uses Google Gemini (`gemini-2.5-flash`). Embeddings are always local via Ollama, but to actually chat you need a Gemini API key:
+
+```bash
+# .env
+GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
+```
+
+- **Without a Gemini key**: Embeddings still generate fine, and the site builds. The chat endpoint returns a clear `503` explaining that chat generation isn't configured.
+- **With a Gemini key**: Full RAG chat works — local Ollama embeddings for retrieval + Gemini for generating answers.
+
 ## 📦 Versioning & Releases
 
 This project follows [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH):
 
 - **Patch (0.0.x)**: Bug fixes and minor changes → `npm run release:patch` or `npm run release`
-- **Minor (0.x.0)**: New features (backward compatible) → `npm run release:minor`  
+- **Minor (0.x.0)**: New features (backward compatible) → `npm run release:minor`
 - **Major (x.0.0)**: Breaking changes → `npm run release:major`
 
 Each release command automatically:
+
 1. Bumps the version in `package.json`
 2. Generates a changelog entry from git commits
 3. Creates a git commit with the version change and changelog
@@ -76,7 +104,7 @@ Each release command automatically:
 The project uses [Keep a Changelog](https://keepachangelog.com/) format. Changelog entries are automatically generated from commit messages:
 
 - **feat:** → Features
-- **fix:** → Bug Fixes  
+- **fix:** → Bug Fixes
 - **docs:** → Documentation
 - **chore:** → Chores
 - Messages with "breaking" → BREAKING CHANGES

@@ -2,21 +2,21 @@
 import Image from "astro/components/Image.astro";
 import { getImage } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Prose from "../../components/prose.astro";
 import Layout from "../../layout/layout.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  return posts.map((post: any) => ({
-    params: { slug: post.slug },
+  return posts.map((post) => ({
+    params: { slug: post.id },
     props: post,
   }));
 }
 
 type Props = CollectionEntry<"blog">;
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 export const prerender = true;
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -46,11 +46,20 @@ const ogImageUrl = new URL(
   imagePath={ogImageUrl}
   description={post.data.description}
 >
-  <article>
-    <p class="py-4 lg:px-16 text-4xl lg:text-5xl lg:font-medium font-semibold">
+  <article class="max-w-4xl mx-auto py-8">
+    <h1 class="py-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-secondary dark:text-white">
       {post.data.title}
+    </h1>
+    <p class="pb-6 text-sm sm:text-base text-gray-500 dark:text-gray-400">
+      {
+        post.data.date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      }
     </p>
-    <div class="lg:px-52">
+    <div class="mb-8">
       <Image
         src={images[post.data.imagePath]()}
         height="658"
@@ -59,22 +68,11 @@ const ogImageUrl = new URL(
         quality={90}
         widths={[640, 960, 1280, 1600]}
         sizes={`(max-width: 640px) 100vw, (max-width: 1280px) 960px, 1600px`}
-        class="rounded-2xl w-full h-auto object-cover aspect-[17/7]"
+        class="rounded-2xl w-full h-auto object-cover aspect-[17/7] shadow-md"
       />
-      <p class="py-4">
-        {
-          post.data.date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        }
-      </p>
-      <Prose>
-        <div class="lg:w-screen lg:max-w-full">
-          <Content />
-        </div>
-      </Prose>
     </div>
+    <Prose>
+      <Content />
+    </Prose>
   </article>
 </Layout>
