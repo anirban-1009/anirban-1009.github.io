@@ -2,29 +2,29 @@
 import Image from "astro/components/Image.astro";
 import { getImage } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Prose from "../../components/prose.astro";
 import Layout from "../../layout/layout.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("work");
-  return posts.map((post: any) => ({
-    params: { slug: post.slug },
+  return posts.map((post) => ({
+    params: { slug: post.id },
     props: post,
   }));
 }
 
 type Props = CollectionEntry<"work">;
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 export const prerender = true;
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "/src/images/cover/*.{jpeg,jpg,png,gif}",
+  "/src/images/cover/*.{jpeg,jpg,png,gif,webp}",
 );
 if (!images[post.data.imagePath])
   throw new Error(
-    `"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif}"`,
+    `"${post.data.imagePath}" does not exist in glob: "/images/*.{jpeg,jpg,png,gif,webp}"`,
   );
 
 const imagePromise = images[post.data.imagePath]();
@@ -46,48 +46,47 @@ const ogImageUrl = new URL(
   imagePath={ogImageUrl}
   description={post.data.description}
 >
-  <article>
-    <p class="py-4 lg:px-16 text-4xl lg:text-5xl lg:font-medium font-semibold">
+  <article class="max-w-4xl mx-auto py-8">
+    <h1 class="py-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-secondary dark:text-white">
       {post.data.title}
+    </h1>
+    <p class="pb-4 text-sm sm:text-base text-gray-500 dark:text-gray-400">
+      {
+        new Date(post.data.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      }
     </p>
-    <div class="lg:px-52">
+    {
+      post.data.tags && post.data.tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-6">
+          {post.data.tags.map((tag: any) => (
+            <a
+              class="text-xs sm:text-sm px-3 py-1 rounded-md border border-primary/30 bg-tint/60 text-secondary dark:border-primary/20 dark:bg-black dark:text-primary hover:border-primary transition-colors"
+              href={`/tag/${tag}`}
+            >
+              {tag}
+            </a>
+          ))}
+        </div>
+      )
+    }
+    <div class="mb-8">
       <Image
         src={images[post.data.imagePath]()}
-        height="166"
-        width="370"
+        height="658"
+        width="1600"
         alt={post.data.description}
-        widths={[240, 540, 720]}
-        sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px`}
-        class="rounded-2xl lg:w-full"
+        quality={90}
+        widths={[640, 960, 1280, 1600]}
+        sizes={`(max-width: 640px) 100vw, (max-width: 1280px) 960px, 1600px`}
+        class="rounded-2xl w-full h-auto object-cover aspect-[17/7] shadow-md"
       />
-      <p class="py-4">
-        {
-          new Date(post.data.date).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        }
-      </p>
-      {
-        post.data.tags && post.data.tags.length > 0 && (
-          <div class="hidden md:flex flex-row gap-3">
-            {post.data.tags.map((tag: any) => (
-              <a
-                class="h-auto w-fit px-3 rounded-lg border border-primary text-primary"
-                href={`/tag/${tag}`}
-              >
-                {tag}
-              </a>
-            ))}
-          </div>
-        )
-      }
-      <Prose>
-        <div class="lg:w-screen lg:max-w-full">
-          <Content />
-        </div>
-      </Prose>
     </div>
+    <Prose>
+      <Content />
+    </Prose>
   </article>
 </Layout>

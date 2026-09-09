@@ -64,9 +64,8 @@ export async function GET(context: any) {
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description,
-      // Compute RSS link from post `slug`
-      // This example assumes all posts are rendered as `/blog/[slug]` routes
-      link: post.type === 'blog' ? `/blogs/${post.slug}/` : `/work/${post.slug}/`, // Conditional link based on type
+      // Compute RSS link from post `id`
+      link: post.type === 'blog' ? `/blogs/${post.id}/` : `/work/${post.id}/`, // Conditional link based on type
       content: sanitize(parser.render(post.body), {
         allowedTags: sanitize.defaults.allowedTags.concat(['img'])
       }),

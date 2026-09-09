@@ -1,0 +1,145 @@
+---
+title: AgentNexus - What's actually happening?
+description: A new blog post about AgentNexus - What's actually happening?.
+imagePath: "/src/images/cover/agent-nexus-cover.jpg"
+metaPath: "/src/images/cover/agent-nexus-cover.jpg"
+tags: ["Astro", "React", "Gemini"]
+date: September 9, 2026
+isDraft: false
+---
+# AgentsNexus India 2026
+
+*September 4–5, 2026, at Polaris School of Technology (workshops) and the C V Vishveshwara Auditorium, Jawaharlal Nehru Planetarium (main conference), Bengaluru*
+
+## Two days of "can it act" giving way to "can we bound it"
+
+I spent two days at **AgentsNexus India 2026**: Thursday's workshop track at Polaris School of Technology, then Friday's full conference across the road at the planetarium's auditorium: two keynotes, a run of talks on memory, protocol security, autonomy, and developer experience, and two panels. Between the note-taking and the hallway conversations, I walked away with a companion thought to the one I brought back from AWS Community Day a few weeks earlier.
+
+That one was about the jump from demo to production. This one is narrower, and I think sharper: **the industry has gotten very good at making agents capable, and it still doesn't have a shared answer for how to make them accountable.** Security, memory, evaluation, autonomy, even product design: session after session was really the same question asked from a different angle: *when this agent does something, how do we know why, and how do we stop it from doing the wrong version of it again?*
+
+## Day 0: Securing agents before they multiply by [Tejas Ladhani](https://www.linkedin.com/in/tejas-ladhani/)
+
+![Securing Agents Workshop by Tejas Ladhani](/images/blogs/agent-nexus/workshop.jpg)
+
+Thursday's workshop track (run by trainers from Motorola Solutions, T9L, and Persistent Systems) framed the problem in a way that stuck with me: going beyond the system prompt and the guardrail slide. A system prompt is a request. It isn't a boundary. The actual boundary is what actions an agent is physically capable of taking, so the workshop spent its time restricting the action space itself rather than making the instructions politer.
+
+A few fault lines came up repeatedly as *the* places this goes wrong in practice:
+
+- **Dynamic capability intake**: an agent that can acquire new tools or permissions at runtime is an agent whose attack surface you can't fully enumerate at design time.
+- **Ingestion blind spots**: whatever the agent reads becomes something it can act on, and most pipelines don't treat ingestion as a trust boundary.
+- **Auto-networks of agents**: the moment agents start calling other agents, the org chart of "who can do what" stops being something a human drew on purpose.
+
+Adding tool after tool doesn't just add capability, it adds *congestion*: more surface for the ambiguity between "the agent is allowed to do this" and "the agent is capable of doing this" to turn into an incident. The tooling side of the answer is starting to show up: **Cisco AI Defense** came up as an open-source option for scanning agents against exactly these fault lines, alongside the idea of a **gateway with security checks in the loop**, verifying a call before the agent acts on it, not just logging it after. On detection specifically, the advice was to stop trusting generic rule sets: off-the-shelf **YARA** rules are a starting point, but they're not tuned to your agents, so the real payoff comes from **writing custom YARA rules** hard-coded to your own tools and CI/CD pipeline. And underneath all of it, a blunt reminder: **the MCP servers we build ourselves are often where the tokens leak from.**
+
+Here is the amazing repo he created and shared with us of the workshop [Repo](https://github.com/Tejas-Ladhani/AgentsNexus-workshop-2026)
+
+---
+
+## The keynotes: from foundation models to "why doesn't it know what it doesn't know"
+
+![Keynote by Manish Gupta (Google DeepMind)](/images/blogs/agent-nexus/keynote-speaker.jpg)
+
+[Manish Gupta](https://www.linkedin.com/in/manish-gupta-4556591/) (Google DeepMind) opened with **AI Models and Agents: A Marriage Made in Heaven?**, tracing the line from static, task-specific models to PaLM's 540B parameters and the "foundation model" label that followed, because PaLM could suddenly generalize across problems rather than being built for one. From there to Gemini 2.0 and 3.0 as DeepMind's answer to the post-ChatGPT world, SIMA as a simulation-trained agent operating in virtual environments, AlphaEvolve applying evolutionary search to improve algorithms, and Project Vaani building the multilingual data foundation (165 districts, 31,000+ hours of audio, 100+ languages) underneath models like the Indic-language work he referenced, because most of those languages simply have no digital corpus to train on otherwise.
+
+The part I keep coming back to, though, was the list of open problems he framed as **agent evaluation gaps**: efficiency, jagged reasoning, safety (agents going rogue against their own systems), uncertainty calibration (models that sound just as confident when they're wrong as when they're right), RL reward hacking (an agent optimizing to *look* like it solved the problem), and RL for domains where you can't even verify the outcome cleanly. That list doubles as a checklist: for what an eval suite should cover, and for where a human escalation rule belongs.
+
+This made me wonder how long we had been talking about bounding these powerful agents if we were smart enough to create them. To my surprise, the conversation was much more submissive, similar to one I had at my office where we use any existing breach in our privacy to accept the agents' super size.
+
+---
+
+## Agents in Context: Knowledge Graphs as Memory
+
+![Agents in Context by Michael Hunger (Neo4j)](/images/blogs/agent-nexus/neo4j.jpg)
+
+[Michael Hunger](https://www.linkedin.com/in/jexpde/) (Neo4j) followed with **Agents in Context**, and made an argument I hadn't heard put this cleanly: most of what an agent needs to act well is *implicit* knowledge, never written down anywhere the model can retrieve it. A bigger context window doesn't fix that: memory and context quality degrade over time regardless of window size, and without the right shape of context an agent just relearns the same mistakes every session with no tendency to actually improve. His answer was information architecture, specifically graphs, as the missing layer between raw embeddings and usable memory:
+
+- Embeddings, vector stores, and models behave like black boxes. A **graph** gives you a map: where the data came from and how it's moving.
+- Memory splits into short-term, long-term, and a reasoning layer, and a graph is a natural structure for holding and relating all three.
+- **Ontology**, the relationships between entities, is what lets you work out *which* memory is actually relevant to a given task, instead of treating all of it as equally important.
+- Training mostly still rewards the successful result, not the path the model took to get there. A graph is one of the few structures that can preserve *how* an agent arrived at an answer, distilled from both positive and negative executions, not just the wins.
+- A **skill is itself a graph**: hierarchical information that, represented that way, compiles faster and makes adding new tools easier.
+- The open problem he left us with: **sharing** this memory. Can you compose something like a *team* memory, instead of every agent hoarding its own black box?
+
+Vasundhara Shukla's afternoon session, **Your Agent Has a Memory Problem: Why Knowledge Graphs Matter**, picked the same thread back up later in the day, a reminder that Neo4j sent two speakers to make essentially one argument from two directions, and it landed both times.
+
+---
+## The YOLO Agent Is Coming: capturing the process, not just the outcome
+
+![The YOLO Agent Is Coming by Karthik Rameshkumar (Entire)](/images/blogs/agent-nexus/enitre.jpg)
+
+[Karthik Rameshkumar](https://www.linkedin.com/in/karthik-rameshkumar/) (Field CTO, Entire) opened his session, **The YOLO Agent Is Coming: How to Run Agentic AI in Production Without Losing Control**, with an observation almost everyone in the room recognized immediately: it's easy to get lost in the prompts you've written over the course of a project and lose the thread of exactly where the work deviated, or how you arrived at the result you eventually shipped. Git and similar version-control systems are built around the outcome. They store the result of a change, not the process that produced it, and in an AI-assisted coding workflow that gap matters more than it used to, because the "process" now includes a prompt, not just a diff.
+
+The product he demoed answers that directly by recording, for every decision: where in the codebase it was made, who prompted it, what was actually prompted, how many tokens it consumed, what it cost, and what kind of correction, he called it coaching, happened along the way. It's the same audit-trail idea from the 5% pattern, just applied at the level of a single prompt instead of a single agent action.
+
+What made the talk land, and this is worth saying plainly, was the delivery as much as the content. It was a genuinely technical session about version management and about how prompting has quietly displaced the write-your-own-code default in day-to-day development, and Karthik used humor throughout without ever letting it wave the complexity away. It kept the room in the conversation instead of splitting it into people who already knew this material and people who didn't.
+
+---
+
+## Securing MCP: credentials need a job description, not a master key
+
+![Securing MCP with Intent-Bound Ephemeral Identity by Shuva Jyoti Kar (Palo Alto Networks)](/images/blogs/agent-nexus/secure-mcp.jpg)
+
+[Shuva Jyoti Kar](https://www.linkedin.com/in/shuva-jyoti-kar/)'s (Palo Alto Networks) **Securing Model Context Protocol (MCP) with Intent-Bound Ephemeral Identity** turned Thursday's workshop worry into a concrete design pattern. The core complaint: **MCP tool calls mostly don't authenticate the payload.** A credential valid for one action quietly turns out to be valid for other, more sensitive ones too, because nobody scoped it that tightly.
+
+The fix is a shift from *role-based* to *task-based* credentials: a token scoped to one job, verified every time that job runs, not a standing grant you forget about. A good credential should be able to answer:
+
+- **Who** is asking
+- **What**, and **where**: the specific action and resource
+- **Why**: the task it's actually for
+- **When**: not-before/expiry, and single-use or max-use revocation
+
+Put together as a fingerprint (identity, duration, task, bound to a role), the flow becomes: the MCP host **canonicalizes** the request against that fingerprint, checks it against identity and policy, and only then lets it through, with everything **audited** on the way out. The line I keep repeating to people: *valid key, wrong job → deny, explain, and record.* Or shorter: **classify, canonicalize, enforce.** Don't hand out a master key because scoping tokens is more work; the work is the point.
+
+---
+## From automation to autonomy: the 5% pattern
+
+![From Automation to Autonomy by Pratul Kumar Chakravarty (Adobe)](/images/blogs/agent-nexus/automation-to-autonomy.jpg)
+
+[Pratul Kumar Chakravarty](https://www.linkedin.com/in/pratulchakravarty/) (Adobe) **From Automation to Autonomy: How Agentic AI Is Redefining Enterprise Decision-Making** opened with a number worth sitting with: **95% of GenAI impact today isn't evaluable.** Every harness and every piece of scaffolding around an agent needs to be verified, and most of it currently isn't: it just runs.
+
+The counter-pattern on offer was small and concrete: **bounded scope from day one, a full audit trail on every action, and a human escalation path**, roughly the 5% of an agent's operating envelope that should be treated as genuinely autonomous, versus checked. The audit-trail point had a real example behind it: **agent history is fragmented** across sessions and tools today.
+
+---
+
+## The New Developer Stack (panel): abundance of intelligence, scarcity of wisdom
+
+![The New Developer Stack Panel Discussion](/images/blogs/agent-nexus/panel-discussion.jpg)
+
+[Karthik Rameshkumar](https://www.linkedin.com/in/karthik-rameshkumar/) moderated a second panel later in the day, **The New Developer Stack: Building, Debugging, and Trusting AI Agents**, with [Ankur Dhir](https://www.linkedin.com/in/ankur-dhir/) (Adobe), [Animesh Dutta](https://www.linkedin.com/in/animesh145/) (Arm), and [Harshit Rohatgi](https://www.linkedin.com/in/harshit-rohatgi-64882117/) (UiPath). The line that outlasted the session it came from: *abundance of intelligence, scarcity of wisdom.* A few others worth keeping:
+
+- **Agent autonomy should be bounded, not binary**: a limited retry budget and a cost ceiling, not an on/off switch.
+- There's still no agreed set of rules for *how* to evaluate an agent, despite how confidently everyone talks about their own.
+- People will go out of their way to get access to a flashy skill instead of focusing on the value it's supposed to produce. Worth asking, before reaching for an agent: *do you actually want to solve this, and how would you approach it yourself?*
+- Understanding your own code is still important: that hasn't gone away just because an agent can produce it.
+- **Causal verification** is becoming the more valuable skill; the LeetCode-style "can you produce correct code" skill is worth less than it used to be.
+- Evals, code review, and maintenance are where low-code and citizen-development tooling are actually delivering right now, a genuinely different shape of progress from the GenAI conversation.
+
+---
+
+## Make what agents want
+
+![Make What Agents Want by Erik Thorelli (CodeRabbit)](/images/blogs/agent-nexus/exik-code-rabbit.jpg)
+
+[Erik Thorelli](https://www.linkedin.com/in/erikthorelli/) (Head of Developer Experience, CodeRabbit) closed the technical program with a talk built around two plain questions: you need to know what your LLM can do, and you need to know what your LLM wants. LLMs are powerful, but they are not magic, and they still need tools to do the job.
+
+On "what your LLM can do," a few of the points that landed:
+
+- AI intelligence isn't human intelligence: it's a compression of the probability of reaching an answer, not reasoning the way we mean it for people. There's no silver bullet, and pretending otherwise is its own failure mode.
+- If you want your product to be agent-accessible: semantic HTML, a proper CLI, well-named variables, and documentation that's actually good, not aspirational.
+- What LLMs work well with: walls of plain text. What they don't: rich GUIs and lazy-loaded content that hides state behind an interaction a model can't perform.
+- The one-liner that got the biggest laugh, and is still the truest thing said all day: **bash is all you need for an AI agent.**
+
+On "what your LLM wants," Erik walked through **DSPy**: defining an agent's behavior through docstring-based signatures instead of hand-written prompts, evaluating it in three layers (labeled-data comparison, rule-based checks, LLM-as-judge for what's left), and optimizing the prompts themselves with **GEPA**. The idea I liked best was what got called the **burrito principle**: don't pick the single best-performing variant and ship it. Select several *good* variants and merge them. Optimizing one thing in isolation isn't as good as collective, combined development; the same instinct as an ensemble, applied to prompts instead of models.
+
+---
+
+## What I'm taking back
+
+- **Capability and accountability are different projects.** AgentsNexus was, session after session, proof that the industry has mostly solved the first and is just starting on the second.
+- **Credentials need a job description.** Task-scoped, time-boxed, audited on every use: a master key is a design shortcut, not a security model.
+- **Memory belongs in a graph.** Short-term, long-term, and reasoning aren't one bucket, and neither is "what actually happened," successes and failures both, which is why Neo4j got two separate sessions to make the point.
+- **Bound autonomy instead of switching it off.** The 5% pattern (narrow scope, full audit trail, human escalation) is a more honest default than "fully autonomous" or "fully manual."
+- **Evaluate the harness, not just the model.** 95% of GenAI impact today isn't evaluable at all, and that gap is exactly where incidents come from.
+- And the one I'll keep repeating to anyone building agent products: **make the thing legible to the agent, not just impressive to the person watching the demo.**
+
+Until the next AgentsNexus: bound the scope, scope the credential, and give the memory somewhere better to live than a bigger context window.
