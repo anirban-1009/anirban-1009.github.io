@@ -47,10 +47,10 @@ const ogImageUrl = new URL(
   description={post.data.description}
 >
   <article class="max-w-4xl mx-auto py-8">
-    <h1 class="py-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-secondary dark:text-white">
+    <h1 class="py-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-secondary dark:text-primary">
       {post.data.title}
     </h1>
-    <p class="pb-6 text-sm sm:text-base text-gray-500 dark:text-gray-400">
+    <p class="pb-6 text-sm sm:text-base text-gray-500 dark:text-primary">
       {
         post.data.date.toLocaleDateString("en-US", {
           year: "numeric",

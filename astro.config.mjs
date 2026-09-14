@@ -38,4 +38,15 @@ export default defineConfig({
     webAnalytics: { enabled: true },
     imageService: false,
   }),
+  vite: {
+    optimizeDeps: {
+      include: [
+        "react",
+        "react-dom",
+        "react-dom/client",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+      ],
+    },
+  },
 });
