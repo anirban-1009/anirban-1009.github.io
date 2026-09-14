@@ -56,8 +56,8 @@ const { title, imagePath, description } = Astro.props;
                 <slot />
             </div>
             <Footer />
-            <ChatWidget client:idle />
         </div>
+        <ChatWidget client:load />
     </body>
 </html>
 

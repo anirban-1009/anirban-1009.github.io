@@ -21,6 +21,7 @@ export default function ChatWidget() {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -239,10 +240,13 @@ export default function ChatWidget() {
     };
 
     const toggleChat = () => {
-        setIsOpen(!isOpen);
-        if (!isOpen) {
-            setTimeout(() => inputRef.current?.focus(), 100);
-        }
+        setIsOpen(prev => {
+            const next = !prev;
+            if (next) {
+                setTimeout(() => inputRef.current?.focus(), 100);
+            }
+            return next;
+        });
     };
 
     useEffect(() => {
@@ -271,16 +275,17 @@ export default function ChatWidget() {
     }, [isOpen]);
 
     return (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+        <div className="fixed bottom-4 right-4 z-[100] flex flex-col items-end">
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed inset-0 z-[100] md:absolute md:bottom-20 md:right-0 md:inset-auto w-full h-full md:w-[400px] md:h-[600px] bg-white dark:bg-black-secondary md:border border-gray-200 dark:border-secondary md:rounded-2xl shadow-none md:shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in slide-in-from-bottom-5 fade-in-0">
+                <div className="fixed inset-0 z-[100] md:static w-full h-full md:w-[400px] md:h-[600px] md:max-h-[calc(100vh-6.5rem)] md:mb-3 bg-white dark:bg-black-secondary md:border border-gray-200 dark:border-secondary md:rounded-2xl shadow-none md:shadow-2xl flex flex-col overflow-hidden transition-all duration-300">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white flex justify-between items-center" style={{ background: 'linear-gradient(to right, #2563eb, #9333ea)', color: 'white' }}>
                         <h3 className="font-semibold text-lg flex items-center gap-2">
                             <span>✨</span> Ask AI about me
                         </h3>
                         <button
+                            type="button"
                             onClick={toggleChat}
                             className="hover:bg-white/20 p-1 rounded-full transition-colors"
                             aria-label="Close chat"
@@ -292,7 +297,7 @@ export default function ChatWidget() {
                     {/* Messages Area */}
                     <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-4 bg-gray-50 dark:bg-black-secondary">
                         {messages.length === 0 && (
-                            <div className="text-center text-gray-500 dark:text-gray-400 mt-10">
+                            <div className="text-center text-gray-500 dark:text-primary mt-10">
                                 <p className="mb-2 text-4xl">👋</p>
                                 <p>Hi there! I've read Anirban's entire portfolio.</p>
                                 <p className="text-sm mt-2">Ask me anything about his work, skills, or blog posts!</p>
@@ -308,7 +313,7 @@ export default function ChatWidget() {
                                 <div
                                     className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === 'user'
                                         ? 'bg-blue-600 text-white rounded-br-none'
-                                        : 'bg-white dark:bg-secondary text-gray-800 dark:text-white border border-gray-200 dark:border-secondary rounded-bl-none shadow-sm'
+                                        : 'bg-white dark:bg-secondary text-gray-800 dark:text-primary border border-gray-200 dark:border-secondary rounded-bl-none shadow-sm'
                                         }`}
                                     style={{
                                         backgroundColor: m.role === 'user' ? '#2563eb' : undefined,
@@ -316,7 +321,7 @@ export default function ChatWidget() {
                                     }}
                                 >
                                     <div className={`prose prose-sm max-w-none
-                                        ${m.role === 'user' ? 'prose-invert text-white prose-p:text-white prose-headings:text-white prose-strong:text-white prose-a:text-white prose-code:text-white' : 'dark:prose-invert dark:text-white dark:prose-p:text-white dark:prose-headings:text-white dark:prose-strong:text-white dark:prose-a:text-white'}
+                                        ${m.role === 'user' ? 'prose-invert text-white prose-p:text-white prose-headings:text-white prose-strong:text-white prose-a:text-white prose-code:text-white' : 'dark:prose-invert dark:text-primary dark:prose-p:text-white dark:prose-headings:text-white dark:prose-strong:text-white dark:prose-a:text-white'}
                                         prose-p:m-0 prose-p:leading-relaxed prose-headings:mb-2 prose-headings:mt-4 prose-ul:my-2 prose-li:my-0.5
                                     `}>
                                         <ReactMarkdown
@@ -361,7 +366,7 @@ export default function ChatWidget() {
                         <div className="relative flex items-center">
                             <input
                                 ref={inputRef}
-                                className="w-full px-4 py-3 pr-12 bg-gray-100 dark:bg-secondary border-none rounded-xl focus:ring-2 focus:ring-blue-500/50 outline-none text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                className="w-full px-4 py-3 pr-12 bg-gray-100 dark:bg-secondary border-none rounded-xl focus:ring-2 focus:ring-blue-500/50 outline-none text-gray-800 dark:text-primary placeholder-gray-500 dark:placeholder-gray-400"
                                 value={input}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
@@ -376,7 +381,7 @@ export default function ChatWidget() {
                                             type="button"
                                             className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-2 ${index === selectedIndex
                                                 ? 'bg-primary text-secondary font-bold'
-                                                : 'text-secondary dark:text-white hover:bg-secondary hover:text-white'
+                                                : 'text-secondary dark:text-primary hover:bg-secondary hover:text-white'
                                                 }`}
                                             onClick={() => {
                                                 const cursor = input.lastIndexOf('@');
@@ -408,8 +413,9 @@ export default function ChatWidget() {
 
             {/* Toggle Button */}
             <button
+                type="button"
                 onClick={toggleChat}
-                className={`h-14 w-14 rounded-full shadow-lg items-center justify-center transition-all duration-300 hover:scale-110 ${isOpen ? 'hidden md:flex bg-gray-200 dark:bg-secondary text-gray-600 dark:text-white rotate-90' : 'flex bg-gradient-to-r from-blue-600 to-purple-600 text-white'}`}
+                className={`h-14 w-14 rounded-full shadow-lg items-center justify-center transition-all duration-300 hover:scale-110 ${isOpen ? 'hidden md:flex bg-gray-200 dark:bg-secondary text-gray-600 dark:text-primary rotate-90' : 'flex bg-gradient-to-r from-blue-600 to-purple-600 text-white'}`}
                 style={!isOpen ? { background: 'linear-gradient(to right, #2563eb, #9333ea)', color: 'white' } : undefined}
                 aria-label="Toggle chat"
             >

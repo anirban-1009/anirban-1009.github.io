@@ -15,7 +15,7 @@ const posts: WorkPost[] = await getCollection('work', ({ data }: any) => {
   imagePath="https://gitlab.com/anirban-1009/anirban.codes/-/raw/main/public/images/SocialHero.jpg?ref_type=heads"
 >
   <section class="py-10 min-h-[60vh]">
-    <p class="text-4xl lg:text-5xl font-sans font-bold py-8 text-secondary dark:text-white">{tags}</p>
+    <p class="text-4xl lg:text-5xl font-sans font-bold py-8 text-secondary dark:text-primary">{tags}</p>
     {posts.length === 0 ? (
       <p class="text-lg text-gray-500">No work projects found tagged with "{tags}".</p>
     ) : (
