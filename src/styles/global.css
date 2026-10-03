@@ -14,3 +14,13 @@ h5:hover .anchor,
 h6:hover .anchor {
   @apply opacity-100;
 }
+
+/* Style inline code in prose and strip raw backtick pseudo-elements */
+.prose :not(pre)>code {
+  @apply bg-tint text-secondary dark:bg-black-secondary dark:text-primary px-1.5 py-0.5 rounded text-sm font-mono font-medium;
+}
+
+.prose :not(pre)>code::before,
+.prose :not(pre)>code::after {
+  content: "" !important;
+}

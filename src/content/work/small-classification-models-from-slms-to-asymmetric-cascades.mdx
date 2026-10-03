@@ -1,0 +1,103 @@
+---
+title: "Small Classification Models: From SLMs to Asymmetric Cascades"
+description: "A new work post about Small Classification Models: From SLMs to Asymmetric Cascades."
+imagePath: "/src/images/cover/small-classification-models-from-slms-to-asymmetric-cascades.png"
+metaPath: "/src/images/cover/small-classification-models-from-slms-to-asymmetric-cascades.png"
+tags: ["AI", "SLMs", "MLX", "System Architecture"]
+date: October 3, 2026
+isDraft: false
+---
+import Mermaid from '../../components/Mermaid';
+
+# Small Classification Models: The Journey from Isolated SLMs to an Asymmetric Cascade
+
+This article documents the architectural evolution of Riva's routing system—specifically how we moved from using isolated Small Language Models (SLMs) to a production-grade cascaded routing architecture. You can explore the full project and design notes in the [Riva Wiki](https://github.com/anirban-1009/riva/wiki).
+
+## 1. The Problem: The SLM Dilemma & The "Argmax Trap"
+
+While developing Riva, we implemented several routing layers to manage how the assistant handles memory and reasoning. We initially experimented with `laya-mlx` (a lightweight SLM) to handle these decisions:
+
+1. **Memory Routing**: Distinguishing durable personal facts from ephemeral states.
+2. **Thinking Routing**: Estimating query complexity to toggle extended reasoning.
+
+### The Calibration Gap
+
+Our empirical evidence from Riva's test suites showed that while SLMs are semantically intuitive, they are inherently miscalibrated. They suffer from **token frequency bias**: during pre-training, passive tokens like `"none"`, `"no"`, or `"trivial"` appear orders of magnitude more frequently than technical tokens like `"high effort"` or `"architectural trade-off"`.
+
+When using a simple **Argmax** approach (picking the token with the highest probability), the model's default resting state is passive. 
+
+**The Failure Scenario:**
+
+A complex query might produce the following distribution:
+
+- `none`: 62%
+- `low`: 20%
+- `high`: 18%
+
+`Argmax` picks `"none"`. The system concludes the query is trivial, bypassing the reasoning engine entirely. In reality, any non-trivial probability mass in the "high" category for an SLM is often a "screaming alarm bell" that the query is complex.
+
+---
+
+## 2. The Solution: The Asymmetric Cascade
+
+To resolve this, we evolved the routing logic into an **Asymmetric Cascade**—a tiered funnel that distributes workload by computational cost, ensuring that the most expensive resource (the neural network) is only used when strictly necessary.
+
+### The 3-Tier Architecture
+
+<Mermaid client:idle chart={`graph TD
+    UserQuery["Incoming User Message"] --> Stage1["Stage 1: Regex Fast Paths (~0.1ms)"]
+    Stage1 -->|Match| Result1["Direct Route"]
+    Stage1 -->|No Match| Stage2["Stage 2: Linguistic & Symbol Guards (1–2.5ms)"]
+    Stage2 -->|Match| Result2["Deterministic Route"]
+    Stage2 -->|No Match| Stage3["Stage 3: Calibrated SLM (30–35ms)"]
+    Stage3 -->|Probabilistic Analysis| Result3["Semantic Route"]
+`} />
+
+#### Stage 1: Regex Fast Paths (~0.1ms)
+
+Handles high-frequency, low-entropy queries. 
+
+- **Scope**: Greetings, simple factoid lookups ("What is..."), and text transformations ("Translate...").
+- **Impact**: ~47% of traffic is routed instantly with zero neural overhead.
+
+#### Stage 2: Linguistic & Symbol Guards (1–2.5ms)
+
+Uses spaCy's dependency parser and strict mathematical regex to catch explicit technical signals.
+
+- **Scope**: Algebraic inequalities (e.g., `x > 5`), eigenvalues, and first-person durable state markers.
+- **Guardrail**: To prevent dates (e.g., `03/12/2022`) from being flagged as division, we enforce whitespace boundaries around arithmetic operators.
+- **Impact**: ~33% of traffic is routed deterministically.
+
+#### Stage 3: Calibrated SLM (30–35ms)
+
+Reserved as the *arbiter of last resort* for ambiguous, deep semantic nuance.
+
+- **The Calibration Fix**: Instead of `argmax`, we use **Probability Mass Thresholding**.
+- **The Rule**: If `P(low) + P(high) > 0.40`, the query is marked as requiring thinking. If `P(high) >= 0.35`, it is routed to high effort.
+- **Impact**: Neutralizes the model's bias toward `"none"`, catching complex architectural trade-offs that rules miss.
+
+---
+
+## 3. Performance & Engineering Results
+
+### Measured Efficiency
+
+The following metrics were derived from Riva's internal benchmarking on an Apple Silicon M3 Pro.
+
+| Metric | Isolated SLM | Asymmetric Cascade | Improvement |
+| --- | --- | --- | --- |
+| **p50 Latency** | ~32ms | 0.00ms | ~100% |
+| **p95 Latency** | ~64ms | 31.3ms | ~50% |
+| **Accuracy** | ~60% | 100% | +40% |
+| **F1 Score** | 0.571 | 1.000 | +0.429 |
+
+---
+
+## 4. External References & Further Reading
+
+For those interested in the underlying mechanics of this approach:
+
+- **Riva Documentation & Architecture**: Explore the [Riva Wiki](https://github.com/anirban-1009/riva/wiki) for full documentation on the routing system and system implementation.
+- **Probability Calibration**: See *Platt Scaling* and *Isotonic Regression* for general methods of fixing model confidence.
+- **Dependency Parsing**: Explore [spaCy's Dependency Parsing documentation](https://spacy.io/usage/linguistic-features#dependency-parsing) to understand how we identify nominal subjects for memory admission.
+- **Small Language Model (SLM) Trends**: Refer to the [Microsoft Phi series](https://azure.microsoft.com/en-us/blog/microsoft-introduces-phi-3-a-family-of-small-language-models/) and the [Google Gemma](https://ai.google.dev/gemma) family for the current state of high-capability, low-parameter models.
